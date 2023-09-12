@@ -1,0 +1,55 @@
+#ifndef MINISHELL_H
+# define MINISHELL_H
+
+# include "libft.h"
+# include <readline/history.h>
+# include <readline/readline.h>
+# include <stdio.h>
+
+/* Error defines */
+# define SUCCESS 0
+# define FAILURE 1
+# define ERRBUILTIN 2
+# define ERRCMD_NOTEXEC 126
+# define ERRCMD_NOTFOUNT 127
+# define ERR_INVALIDARG 128
+# define ERR_CTRLC 130
+
+/* Token */
+enum e_token_types {
+	SPC = 1,
+	PIPE,
+	VAR,
+	CMD,
+	BUILTIN,
+	WORD,
+	HEREDOC,
+	APPEND,
+	INFILE,
+	OUTFILE
+};
+
+typedef struct s_data
+{
+	char	*temp;
+	char	**path;
+	t_list	*env;
+}			t_data;
+
+/* Main */
+void	read_prompt(t_data *data);
+void	copy_env(t_list **list, char **env);
+char	**save_path(char **envp);
+void	init_readline(t_data *data);
+
+/* Free */
+void	free_for_all(t_data *data);
+void	free_str_arrs(char **arr);
+void	free_list(t_list *list);
+
+/* Builtin */
+void	exit_builtin(t_data *data);
+void	env_builtin(t_data *data);
+void	pwd_builtin(void);
+
+#endif
