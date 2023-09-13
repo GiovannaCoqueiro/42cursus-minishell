@@ -67,12 +67,15 @@ void	init_readline(t_data *data)
 
 void	read_prompt(t_data *data)
 {
-	if (ft_strncmp(data->prompt, "exit", 4) == 0)
+	if (ft_strcmp(data->prompt, "exit") == 0)
 		exit_builtin(data);
-	else if (ft_strncmp(data->prompt, "env", 3) == 0)
+	else if (ft_strcmp(data->prompt, "env") == 0)
 		env_builtin(data);
-	else if (ft_strncmp(data->prompt, "pwd", 3) == 0)
+	else if (ft_strcmp(data->prompt, "pwd") == 0)
 		pwd_builtin();
-	else if (ft_strncmp(data->prompt, "unset", 5) == 0)
+	else if (ft_strcmp(data->prompt, "unset") == 0)
 		unset_builtin(data);
+	// else if (ft_strcmp(data->prompt, "export") == 0)
+	// 	export_builtin(data);
+	
 }

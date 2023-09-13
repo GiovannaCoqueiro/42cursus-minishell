@@ -30,11 +30,19 @@ enum e_token_types {
 	OUTFILE
 };
 
+typedef struct s_var
+{
+	char	*str;
+	char	*var;
+	char	*value;
+}	t_var;
+
 typedef struct s_data
 {
 	char	*prompt;
 	char	**path;
 	t_list	*env;
+	t_var	*var;
 }			t_data;
 
 /* Main */
