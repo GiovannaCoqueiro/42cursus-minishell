@@ -7,6 +7,8 @@ int	main(int argc, char **argv, char **envp)
 	(void) argv;
 	if (argc == 1)
 	{
+		// signal(SIGINT, signal_handler);
+		signal(SIGQUIT, SIG_IGN);
 		data = ft_calloc(1, sizeof(t_data));
 		data->path = save_path(envp);
 		copy_env(&data->env, envp);
@@ -50,22 +52,27 @@ void	init_readline(t_data *data)
 {
 	while (true)
 	{
-		data->temp = readline("$>");
-		if (data->temp == NULL)
+		data->prompt = readline("$>");
+		if (data->prompt == NULL)
+		{
+			ft_putendl_fd("exit", 1);
 			break ;
-		if (ft_strlen(data->temp) >= 1)
-			add_history(data->temp);
+		}
+		if (ft_strlen(data->prompt) >= 1)
+			add_history(data->prompt);
 		read_prompt(data);
-		free(data->temp);
+		free(data->prompt);
 	}
 }
 
 void	read_prompt(t_data *data)
 {
-	if (ft_strncmp(data->temp, "exit", 4) == 0)
+	if (ft_strncmp(data->prompt, "exit", 4) == 0)
 		exit_builtin(data);
-	else if (ft_strncmp(data->temp, "env", 3) == 0)
+	else if (ft_strncmp(data->prompt, "env", 3) == 0)
 		env_builtin(data);
-	else if (ft_strncmp(data->temp, "pwd", 3) == 0)
+	else if (ft_strncmp(data->prompt, "pwd", 3) == 0)
 		pwd_builtin();
+	else if (ft_strncmp(data->prompt, "unset", 5) == 0)
+		unset_builtin(data);
 }
