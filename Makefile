@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: gcoqueir <gcoqueir@student.42.fr>          +#+  +:+       +#+         #
+#    By: bedos-sa <bedos-sa@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/12 10:33:46 by bedos-sa          #+#    #+#              #
-#    Updated: 2023/09/12 08:17:39 by gcoqueir         ###   ########.fr        #
+#    Updated: 2023/09/13 11:52:22 by bedos-sa         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,13 +23,16 @@ LIBFT = ./libft
 LIBS = ./include
 OBJ_DIR = build/
 BUILT_DIR = builtin/
+SIG_DIR = signal/
 
 RM = rm -f
 FILES = main.c \
 		frees.c \
 		$(BUILT_DIR)exit.c \
 		$(BUILT_DIR)env.c \
-		$(BUILT_DIR)pwd.c
+		$(BUILT_DIR)pwd.c \
+		$(BUILT_DIR)unset.c \
+		$(SIG_DIR)signal.c
 OBJS = $(FILES:.c=.o)
 
 
@@ -41,6 +44,7 @@ $(OBJ_DIR)%.o: %.c
 mkdir_obj:
 	@mkdir -p $(OBJ_DIR)
 	@mkdir -p $(OBJ_DIR)$(BUILT_DIR)
+	@mkdir -p $(OBJ_DIR)$(SIG_DIR)
 
 $(NAME): $(addprefix $(OBJ_DIR), $(OBJS))
 	@make -C $(LIBFT) --silent
@@ -50,7 +54,7 @@ $(NAME): $(addprefix $(OBJ_DIR), $(OBJS))
 run: all
 	./$(NAME)
 
-val: 
+val: all
 	valgrind --suppressions=./local.supp --leak-check=full --show-leak-kinds=all ./$(NAME)
 
 bonus: all

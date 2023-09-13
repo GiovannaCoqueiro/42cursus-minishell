@@ -5,6 +5,7 @@
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <stdio.h>
+# include <signal.h>
 
 /* Error defines */
 # define SUCCESS 0
@@ -31,7 +32,7 @@ enum e_token_types {
 
 typedef struct s_data
 {
-	char	*temp;
+	char	*prompt;
 	char	**path;
 	t_list	*env;
 }			t_data;
@@ -51,5 +52,11 @@ void	free_list(t_list *list);
 void	exit_builtin(t_data *data);
 void	env_builtin(t_data *data);
 void	pwd_builtin(void);
+void	unset_builtin(t_data *data);
+
+/* Signal */
+void	signal_handler(int signal);
+void	signal_ignore(void);
+void	signal_default(void);
 
 #endif
