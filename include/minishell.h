@@ -17,17 +17,16 @@
 # define ERR_CTRLC 130
 
 /* Token */
-enum e_token_types {
-	SPC = 1,
-	PIPE,
-	VAR,
-	CMD,
-	BUILTIN,
-	WORD,
+enum e_token
+{
+	INFILE = 1,
+	OUTFILE,
 	HEREDOC,
 	APPEND,
-	INFILE,
-	OUTFILE
+	PIPE,
+	BULTIN,
+	CMD,
+	ARG
 };
 
 typedef struct s_var
