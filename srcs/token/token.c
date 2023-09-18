@@ -22,6 +22,8 @@ void	tokenization(t_data *data)
 		free(temp);
 		i += len - 1;
 	}
+	lexing(data);
+	free(data->lexer);
 }
 
 static int	token_len(char *token)

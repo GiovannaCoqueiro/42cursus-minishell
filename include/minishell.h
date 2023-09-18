@@ -23,14 +23,14 @@
 # define ERR_CTRLC 130
 
 /* Lexer */
-enum e_token
+enum e_lexeme
 {
 	INFILE = 1,
 	OUTFILE,
 	HEREDOC,
 	APPEND,
 	PIPE,
-	BULTIN,
+	BUILTIN,
 	CMD,
 	ARG
 };
@@ -50,6 +50,7 @@ typedef struct s_data
 	t_list	*env;
 	t_var	*var;
 	t_list	*token;
+	int		*lexer;
 }			t_data;
 
 /* Main */
@@ -89,5 +90,6 @@ void	change_value_in_var(t_data *data, t_var *node);
 
 /* Token */
 void	tokenization(t_data *data);
+int		lexing(t_data *data);
 
 #endif

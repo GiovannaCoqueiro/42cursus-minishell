@@ -6,7 +6,7 @@
 #    By: gcoqueir <gcoqueir@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/12 10:33:46 by bedos-sa          #+#    #+#              #
-#    Updated: 2023/09/17 20:44:46 by gcoqueir         ###   ########.fr        #
+#    Updated: 2023/09/18 08:42:57 by gcoqueir         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,7 +38,8 @@ FILES = main.c \
 		$(BUILT_DIR)export.c \
 		$(SIG_DIR)signal.c \
 		$(VAR_DIR)var_list.c \
-		$(TOKEN_DIR)token.c
+		$(TOKEN_DIR)token.c \
+		$(TOKEN_DIR)lexer.c
 OBJS = $(FILES:.c=.o)
 
 

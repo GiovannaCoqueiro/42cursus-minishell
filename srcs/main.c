@@ -32,6 +32,7 @@ void	init_readline(t_data *data)
 	while (true)
 	{
 		data->token = NULL;
+		data->lexer = NULL;
 		data->prompt = readline("$> ");
 		if (data->prompt == NULL)
 		{
