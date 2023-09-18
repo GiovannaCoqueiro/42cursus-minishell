@@ -2,7 +2,7 @@
 
 static int	token_len(char *token);
 static int	is_metachar(char c);
-static int	is_quoted(char c);
+static int	is_quoted(char c, int identifier);
 
 void	tokenization(t_data *data)
 {
@@ -31,7 +31,7 @@ static int	token_len(char *token)
 	int	metachar;
 
 	metachar = is_metachar(token[0]);
-	quoted = is_quoted(token[0]);
+	quoted = is_quoted(token[0], 0);
 	i = 0;
 	while (token[++i] != '\0')
 	{
@@ -45,20 +45,33 @@ static int	token_len(char *token)
 		{
 			if (token[i] == ' ' || is_metachar(token[i]) == 1)
 				return (i);
-			quoted = is_quoted(token[i]);
+			quoted = is_quoted(token[i], quoted);
 		}
 		else
-			quoted = is_quoted(token[i]);
+			quoted = is_quoted(token[i], quoted);
 	}
 	return (i);
 }
 
-static int	is_quoted(char c)
+static int	is_quoted(char c, int identifier)
 {
-	if (c == S_QUOTE)
-		return (1);
-	else if (c == D_QUOTES)
-		return (2);
+	if (identifier == 0)
+	{
+		if (c == S_QUOTE)
+			return (1);
+		else if (c == D_QUOTES)
+			return (2);
+	}
+	else if (identifier == 1)
+	{
+		if (c != S_QUOTE)
+			return (1);
+	}
+	else if (identifier == 2)
+	{
+		if (c != D_QUOTES)
+			return (2);
+	}
 	return (0);
 }
 

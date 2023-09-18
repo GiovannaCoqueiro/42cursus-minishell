@@ -7,6 +7,12 @@
 # include <stdio.h>
 # include <signal.h>
 
+/* Characteres */
+# define METACHAR "<>| "
+# define BLANK "\t\n\v\f\r "
+# define S_QUOTE '\''
+# define D_QUOTES '\"'
+
 /* Error defines */
 # define SUCCESS 0
 # define FAILURE 1
@@ -16,7 +22,7 @@
 # define ERR_INVALIDARG 128
 # define ERR_CTRLC 130
 
-/* Token */
+/* Lexer */
 enum e_token
 {
 	INFILE = 1,
@@ -31,9 +37,10 @@ enum e_token
 
 typedef struct s_var
 {
-	char	*str;
-	char	*var;
-	char	*value;
+	char			*str;
+	char			*key;
+	char			*value;
+	struct s_var	*next;
 }	t_var;
 
 typedef struct s_data
@@ -42,6 +49,7 @@ typedef struct s_data
 	char	**path;
 	t_list	*env;
 	t_var	*var;
+	t_list	*token;
 }			t_data;
 
 /* Main */
@@ -52,18 +60,34 @@ void	init_readline(t_data *data);
 
 /* Free */
 void	free_for_all(t_data *data);
-void	free_str_arrs(char **arr);
 void	free_list(t_list *list);
+void	free_var_list(t_var *var);
 
 /* Builtin */
 void	exit_builtin(t_data *data);
 void	env_builtin(t_data *data);
 void	pwd_builtin(void);
 void	unset_builtin(t_data *data);
+void	export_builtin(t_data *data);
+
+/* Builtin Utils*/
+t_list	*copy_env_list(t_list *env, t_list *lst);
 
 /* Signal */
 void	signal_handler(int signal);
 void	signal_ignore(void);
 void	signal_default(void);
+
+/* Var */
+t_var	*set_var(char *str);
+void	new_var(t_data *data);
+void	var_add_back(t_var **lst, t_var *new);
+t_list	*find_env(t_data *data);
+t_var	*find_var(t_data *data);
+void	change_value_in_env(t_data *data, t_list *node);
+void	change_value_in_var(t_data *data, t_var *node);
+
+/* Token */
+void	tokenization(t_data *data);
 
 #endif

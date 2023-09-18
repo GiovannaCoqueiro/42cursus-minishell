@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: bedos-sa <bedos-sa@student.42.fr>          +#+  +:+       +#+         #
+#    By: gcoqueir <gcoqueir@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/12 10:33:46 by bedos-sa          #+#    #+#              #
-#    Updated: 2023/09/13 11:52:22 by bedos-sa         ###   ########.fr        #
+#    Updated: 2023/09/17 20:44:46 by gcoqueir         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,15 +24,21 @@ LIBS = ./include
 OBJ_DIR = build/
 BUILT_DIR = builtin/
 SIG_DIR = signal/
+VAR_DIR = var/
+TOKEN_DIR = token/
 
 RM = rm -f
 FILES = main.c \
 		frees.c \
+		save_path.c \
 		$(BUILT_DIR)exit.c \
 		$(BUILT_DIR)env.c \
 		$(BUILT_DIR)pwd.c \
 		$(BUILT_DIR)unset.c \
-		$(SIG_DIR)signal.c
+		$(BUILT_DIR)export.c \
+		$(SIG_DIR)signal.c \
+		$(VAR_DIR)var_list.c \
+		$(TOKEN_DIR)token.c
 OBJS = $(FILES:.c=.o)
 
 
@@ -45,6 +51,8 @@ mkdir_obj:
 	@mkdir -p $(OBJ_DIR)
 	@mkdir -p $(OBJ_DIR)$(BUILT_DIR)
 	@mkdir -p $(OBJ_DIR)$(SIG_DIR)
+	@mkdir -p $(OBJ_DIR)$(VAR_DIR)
+	@mkdir -p $(OBJ_DIR)$(TOKEN_DIR)
 
 $(NAME): $(addprefix $(OBJ_DIR), $(OBJS))
 	@make -C $(LIBFT) --silent
