@@ -4,7 +4,7 @@ int	main(int argc, char **argv, char **envp)
 {
 	t_data	*data;
 
-	(void) argv;
+	(void)argv;
 	if (argc == 1)
 	{
 		// signal(SIGINT, signal_handler);
@@ -20,39 +20,19 @@ int	main(int argc, char **argv, char **envp)
 
 void	copy_env(t_list **list, char **env)
 {
-	int		i;
+	int	i;
 
 	i = -1;
 	while (env[++i] != NULL)
-		ft_lstadd_back(list, ft_lstnew(env[i]));
-}
-
-char	**save_path(char **envp)
-{
-	char	*start;
-	char	**arr;
-
-	arr = NULL;
-	while (*envp)
-	{
-		start = ft_strnstr(*envp, "PATH=", 5);
-		if (start != NULL)
-		{
-			start = ft_strtrim(start, "PATH=");
-			arr = ft_split(start, ':');
-			break ;
-		}
-		envp++;
-	}
-	free(start);
-	return (arr);
+		ft_lstadd_back(list, ft_lstnew(ft_strdup(env[i])));
 }
 
 void	init_readline(t_data *data)
 {
 	while (true)
 	{
-		data->prompt = readline("$>");
+		data->token = NULL;
+		data->prompt = readline("$> ");
 		if (data->prompt == NULL)
 		{
 			ft_putendl_fd("exit", 1);
@@ -60,8 +40,34 @@ void	init_readline(t_data *data)
 		}
 		if (ft_strlen(data->prompt) >= 1)
 			add_history(data->prompt);
+		tokenization(data);
+		free_list(data->token);
 		read_prompt(data);
 		free(data->prompt);
+	}
+}
+
+static void	teste(t_data *data)
+{
+	t_var	*temp;
+
+	if (data->var == NULL)
+	{
+		printf("vazio\n");
+	}
+	else
+	{
+		temp = data->var;
+		while (temp)
+		{
+			printf("str: %s\n", temp->str);
+			printf("key: %s\n", temp->key);
+			if (temp->value != NULL)
+				printf("value: %s\n", temp->value);
+			else
+				printf("value: (null)\n");
+			temp = temp->next;
+		}
 	}
 }
 
@@ -75,7 +81,16 @@ void	read_prompt(t_data *data)
 		pwd_builtin();
 	else if (ft_strncmp(data->prompt, "unset", 5) == 0)
 		unset_builtin(data);
-	// else if (ft_strcmp(data->prompt, "export") == 0)
-	// 	export_builtin(data);
-	
+	else if (ft_strncmp(data->prompt, "export", 6) == 0)
+		export_builtin(data);
+	else if (ft_strcmp(data->prompt, "teste") == 0)
+		teste(data);
+	else if (ft_strchr(data->prompt, '=') != NULL)
+		new_var(data);
 }
+
+// export sem argumento lista as variaveis em ordem
+// alfabetica e lista tembem as que nao tem conteudo
+
+// exec exige um ponteiro de ponteiro para receber env,
+// ou seja, transformar em array a lista linkada
