@@ -4,7 +4,39 @@ static int	token_len(char *token);
 static int	is_metachar(char c);
 static int	is_quoted(char c, int identifier);
 
-void	tokenization(t_data *data)
+void	print_lex_and_token(t_data *data)
+{
+	t_list	*temp;
+	int		i;
+
+	i = 0;
+	temp = data->token;
+	while (temp != NULL)
+	{
+		printf("token: %s    ", (char *)temp->content);
+		printf("lex value: %d    ", data->lexer[i]);
+		if (data->lexer[i] == 1)
+			printf("type: %s\n", "INFILE");
+		else if (data->lexer[i] == 2)
+			printf("type: %s\n", "OUTFILE");
+		else if (data->lexer[i] == 3)
+			printf("type: %s\n", "HEREDOC");
+		else if (data->lexer[i] == 4)
+			printf("type: %s\n", "APPEND");
+		else if (data->lexer[i] == 5)
+			printf("type: %s\n", "PIPE");
+		else if (data->lexer[i] == 6)
+			printf("type: %s\n", "BUILTIN");
+		else if (data->lexer[i] == 7)
+			printf("type: %s\n", "CMD");
+		else if (data->lexer[i] == 8)
+			printf("type: %s\n", "ARG");
+		temp = temp->next;
+		i++;
+	}
+}
+
+int	tokenization(t_data *data)
 {
 	int		i;
 	int		len;
@@ -13,17 +45,26 @@ void	tokenization(t_data *data)
 	i = -1;
 	while (data->prompt[++i] != '\0')
 	{
-		while (ft_strchr(BLANK, data->prompt[i]) != NULL)
+		while (ft_strchr(BLANK, data->prompt[i]) != NULL
+			&& data->prompt[i] != '\0')
 			i++;
+		if (data->prompt[i] == '\0')
+			break ;
 		len = token_len(&data->prompt[i]);
-		temp = malloc((len + 1) * sizeof(char));
+		temp = ft_calloc((len + 1), sizeof(char));
 		ft_strlcpy(temp, &data->prompt[i], len + 1);
 		ft_lstadd_back(&data->token, ft_lstnew(ft_strdup(temp)));
 		free(temp);
 		i += len - 1;
 	}
-	lexing(data);
+	if (lex_analysis(data) == 0)
+	{
+		free(data->lexer);
+		return (0);
+	}
+	print_lex_and_token(data);
 	free(data->lexer);
+	return (1);
 }
 
 static int	token_len(char *token)

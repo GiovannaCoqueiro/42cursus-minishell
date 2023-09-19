@@ -1,0 +1,8 @@
+--pipex
+
+--expansão de variavel
+
+--exit code
+
+--terminar builtins
+

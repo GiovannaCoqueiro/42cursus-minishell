@@ -6,7 +6,7 @@
 #    By: gcoqueir <gcoqueir@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/12 10:33:46 by bedos-sa          #+#    #+#              #
-#    Updated: 2023/09/18 08:42:57 by gcoqueir         ###   ########.fr        #
+#    Updated: 2023/09/19 15:30:07 by gcoqueir         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,6 +26,7 @@ BUILT_DIR = builtin/
 SIG_DIR = signal/
 VAR_DIR = var/
 TOKEN_DIR = token/
+PIPEX_DIR = pipex/
 
 RM = rm -f
 FILES = main.c \
@@ -39,7 +40,13 @@ FILES = main.c \
 		$(SIG_DIR)signal.c \
 		$(VAR_DIR)var_list.c \
 		$(TOKEN_DIR)token.c \
-		$(TOKEN_DIR)lexer.c
+		$(TOKEN_DIR)lexer.c \
+		$(TOKEN_DIR)syntax.c \
+		$(PIPEX_DIR)pipex.c \
+		$(PIPEX_DIR)process.c \
+		$(PIPEX_DIR)here_doc.c \
+		$(PIPEX_DIR)free_and_finish.c
+		
 OBJS = $(FILES:.c=.o)
 
 
@@ -54,6 +61,7 @@ mkdir_obj:
 	@mkdir -p $(OBJ_DIR)$(SIG_DIR)
 	@mkdir -p $(OBJ_DIR)$(VAR_DIR)
 	@mkdir -p $(OBJ_DIR)$(TOKEN_DIR)
+	@mkdir -p $(OBJ_DIR)$(PIPEX_DIR)
 
 $(NAME): $(addprefix $(OBJ_DIR), $(OBJS))
 	@make -C $(LIBFT) --silent

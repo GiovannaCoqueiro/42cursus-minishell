@@ -28,3 +28,10 @@
     - builtin
     - cmd
     - arg
+
+
+-- regras sintaticas
+    - não pode terminar com pipe ou redirect
+    - não pode começar com pipe
+    - após redirect precisa ter um argumento
+    - 

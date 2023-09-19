@@ -6,6 +6,9 @@
 # include <readline/readline.h>
 # include <stdio.h>
 # include <signal.h>
+# include <errno.h>
+# include <string.h>
+# include <sys/wait.h>
 
 /* Characteres */
 # define METACHAR "<>| "
@@ -43,9 +46,18 @@ typedef struct s_var
 	struct s_var	*next;
 }	t_var;
 
+typedef struct s_pipex
+{
+	int		infile;
+	int		outfile;
+	char	**cmd;
+	char	**all_paths;
+}			t_pipex;
+
 typedef struct s_data
 {
 	char	*prompt;
+	char	*perline;
 	char	**path;
 	t_list	*env;
 	t_var	*var;
@@ -88,8 +100,18 @@ t_var	*find_var(t_data *data);
 void	change_value_in_env(t_data *data, t_list *node);
 void	change_value_in_var(t_data *data, t_var *node);
 
-/* Token */
-void	tokenization(t_data *data);
-int		lexing(t_data *data);
+/* Token and syntax*/
+int		tokenization(t_data *data);
+int		lex_analysis(t_data *data);
+int		syntax_analysis(int *lexer, int len);
+
+/* Pipex */
+void	pipex(int argc, char **argv, char **envp);
+void	make_cmd(char **envp, char *command, t_pipex *pipex);
+void	cmd_search(char **envp, t_pipex *pipex);
+void	free_tab(char **tab);
+void	error_check(int i, t_pipex *pipex);
+void	pipe_it(char *cmd, char **envp, t_pipex *pipex);
+void	here_doc(char *end_msg, t_pipex *pipex);
 
 #endif
