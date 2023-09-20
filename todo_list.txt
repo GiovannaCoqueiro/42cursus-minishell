@@ -1,8 +1,12 @@
---pipex
+-- expansão de variavel
+    - procurar por '$'
+    - procurar na lista de variáveis pela variável passada
+    - substituir a $key pelo valor
+    - ignorar a expansão caso o '$' esteja entre aspas simples 
 
---expansão de variavel
+-- exec
 
---exit code
+-- exit code
 
---terminar builtins
+-- terminar builtins
 

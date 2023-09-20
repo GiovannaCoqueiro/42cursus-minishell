@@ -59,17 +59,19 @@ typedef struct s_data
 	char	*prompt;
 	char	*perline;
 	char	**path;
+	char	**env_copy;
 	t_list	*env;
 	t_var	*var;
 	t_list	*token;
 	int		*lexer;
 }			t_data;
 
-/* Main */
-void	read_prompt(t_data *data);
+/* Init */
 void	copy_env(t_list **list, char **env);
+char 	**env_copy(char **envp);
 char	**save_path(char **envp);
 void	init_readline(t_data *data);
+void	read_prompt(t_data *data);
 
 /* Free */
 void	free_for_all(t_data *data);
@@ -83,7 +85,7 @@ void	pwd_builtin(void);
 void	unset_builtin(t_data *data);
 void	export_builtin(t_data *data);
 
-/* Builtin Utils*/
+/* Builtin Utils */
 t_list	*copy_env_list(t_list *env, t_list *lst);
 
 /* Signal */
@@ -105,7 +107,7 @@ int		tokenization(t_data *data);
 int		lex_analysis(t_data *data);
 int		syntax_analysis(int *lexer, int len);
 
-/* Pipex */
+/* Exec */
 void	pipex(int argc, char **argv, char **envp);
 void	make_cmd(char **envp, char *command, t_pipex *pipex);
 void	cmd_search(char **envp, t_pipex *pipex);

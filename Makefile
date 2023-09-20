@@ -6,7 +6,7 @@
 #    By: gcoqueir <gcoqueir@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/12 10:33:46 by bedos-sa          #+#    #+#              #
-#    Updated: 2023/09/19 15:30:07 by gcoqueir         ###   ########.fr        #
+#    Updated: 2023/09/20 07:26:13 by gcoqueir         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,16 +22,17 @@ CFLAGS = -Wall -Wextra -Werror -I$(LIBS) -O3 -g3
 LIBFT = ./libft
 LIBS = ./include
 OBJ_DIR = build/
+INIT_DIR = init_utils/
 BUILT_DIR = builtin/
 SIG_DIR = signal/
 VAR_DIR = var/
 TOKEN_DIR = token/
-PIPEX_DIR = pipex/
+EXEC_DIR = exec/
 
 RM = rm -f
 FILES = main.c \
 		frees.c \
-		save_path.c \
+		$(INIT_DIR)init_utils.c \
 		$(BUILT_DIR)exit.c \
 		$(BUILT_DIR)env.c \
 		$(BUILT_DIR)pwd.c \
@@ -42,10 +43,10 @@ FILES = main.c \
 		$(TOKEN_DIR)token.c \
 		$(TOKEN_DIR)lexer.c \
 		$(TOKEN_DIR)syntax.c \
-		$(PIPEX_DIR)pipex.c \
-		$(PIPEX_DIR)process.c \
-		$(PIPEX_DIR)here_doc.c \
-		$(PIPEX_DIR)free_and_finish.c
+		$(EXEC_DIR)pipex.c \
+		$(EXEC_DIR)process.c \
+		$(EXEC_DIR)here_doc.c \
+		$(EXEC_DIR)free_and_finish.c \
 		
 OBJS = $(FILES:.c=.o)
 
@@ -57,11 +58,12 @@ $(OBJ_DIR)%.o: %.c
 
 mkdir_obj:
 	@mkdir -p $(OBJ_DIR)
+	@mkdir -p $(OBJ_DIR)$(INIT_DIR)
 	@mkdir -p $(OBJ_DIR)$(BUILT_DIR)
 	@mkdir -p $(OBJ_DIR)$(SIG_DIR)
 	@mkdir -p $(OBJ_DIR)$(VAR_DIR)
 	@mkdir -p $(OBJ_DIR)$(TOKEN_DIR)
-	@mkdir -p $(OBJ_DIR)$(PIPEX_DIR)
+	@mkdir -p $(OBJ_DIR)$(EXEC_DIR)
 
 $(NAME): $(addprefix $(OBJ_DIR), $(OBJS))
 	@make -C $(LIBFT) --silent
