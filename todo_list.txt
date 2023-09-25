@@ -3,7 +3,7 @@
     - procurar na lista de variáveis pela variável passada
     - substituir a $key pelo valor
     - ignorar a expansão caso o '$' esteja entre aspas simples 
-MAKELEVEL $MAKELEVEL "$MAKELEVEL" "$MAKELEVEL $MAKELEVEL" "$MAKELEVEL " '$MAKELEVEL' "'$MAKELEVEL'" $$ $MAKELEVEL'' $AAA "$AAA'ASSAA" $"MAKELEVEL"
+echo USER $USER "$USER" "$USER $USER" "$USER " '$USER' "'$USER'" $$ $USER'' $AAA "$AAA'ASSAA" $"USER" $MFLAGS AAAA"$MFLAGS"AA
 
 -- exec
 

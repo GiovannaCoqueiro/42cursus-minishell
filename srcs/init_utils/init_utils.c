@@ -58,12 +58,13 @@ void	init_readline(t_data *data)
 		if (ft_strlen(data->prompt) >= 1)
 		{
 			add_history(data->prompt);
-			if (tokenization(data) == 1)
+			if (tokenization(data) == 1 && check_for_quotes(data->token) == 1)
 			{
-				fix_input(data->token, data->env);
+				check_var(data->token, data->env);
 				read_prompt(data);
 			}
 			free_list(data->token);
+			printf("perline: %s\n", data->perline);
 			free(data->perline);
 		}
 		free(data->prompt);

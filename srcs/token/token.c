@@ -61,7 +61,7 @@ int	tokenization(t_data *data)
 		free(data->lexer);
 		return (0);
 	}
-	print_lex_and_token(data);
+	// print_lex_and_token(data);
 	free(data->lexer);
 	return (1);
 }

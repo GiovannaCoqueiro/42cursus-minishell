@@ -110,7 +110,10 @@ int		syntax_analysis(int *lexer, int len);
 int		is_quoted(char c, int identifier);
 
 /* Fix input */
-void	fix_input(t_list *token, t_list *env);
+int		check_for_quotes(t_list *token);
+void	check_var(t_list *token, t_list *env);
+char	*search_and_expand_var(char *str, t_list *env);
+char	*search_and_remove_quotes(char *str);
 
 /* Exec */
 void	pipex(int argc, char **argv, char **envp);
