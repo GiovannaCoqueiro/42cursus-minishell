@@ -16,9 +16,9 @@ char	*search_and_expand_var(char *str, t_list *env)
 	{
 		quoted = is_quoted(str[i], quoted);
 		if (quoted == 0 && (str[i] == '$' && str[i + 1] != '\0'
-				&& str[i + 1] != NULL))
+				&& str[i + 1] != ' ' && str[i + 1] != '$'))
 			str = expand_var(str, i, env);
-		if (quoted == 2 && (str[i] == '$' && str[i + 1] != '\0'
+		else if (quoted == 2 && (str[i] == '$' && str[i + 1] != '\0'
 				&& ft_strchr(VAR_STOPER, str[i + 1]) == NULL))
 			str = expand_var(str, i, env);
 		if (str[0] == '\0')
@@ -36,8 +36,6 @@ static char	*expand_var(char *str, int index, t_list *env)
 	i = index + 1;
 	while (ft_strchr(VAR_STOPER, str[i]) == NULL && str[i] != '\0')
 		i++;
-	if (i == index + 1)
-		return (str);
 	temp = get_key(str, index, i);
 	while (env != NULL)
 	{

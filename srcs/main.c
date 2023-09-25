@@ -12,7 +12,7 @@ int	main(int argc, char **argv, char **envp)
 		data = ft_calloc(1, sizeof(t_data));
 		data->path = save_path(envp);
 		data->env_copy = env_copy(envp);
-		copy_env(&data->env, envp);
+		copy_env(&data->env, envp, data);
 		init_readline(data);
 		free_for_all(data);
 	}

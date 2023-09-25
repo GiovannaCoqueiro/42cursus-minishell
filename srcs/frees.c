@@ -15,6 +15,8 @@ void	free_for_all(t_data	*data)
 		free_list(data->token);
 	if (data->lexer != NULL)
 		free(data->lexer);
+	if (data->home != NULL)
+		free(data->home);
 	free(data);
 }
 

@@ -2,7 +2,7 @@
 
 static void	sort_env(t_list *export);
 static void	print_export(t_list *export);
-static int find_in_env(t_data *data, char	*prompt);
+static int	find_in_env(t_data *data, char	*prompt);
 
 void	export_builtin(t_data *data)
 {

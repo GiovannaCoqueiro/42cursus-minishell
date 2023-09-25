@@ -1,12 +1,19 @@
 #include "minishell.h"
 
-void	copy_env(t_list **list, char **env)
+void	copy_env(t_list **list, char **env, t_data *data)
 {
 	int	i;
 
 	i = -1;
 	while (env[++i] != NULL)
+	{
 		ft_lstadd_back(list, ft_lstnew(ft_strdup(env[i])));
+		if (ft_strncmp(env[i], "HOME=", 5) == 0)
+		{
+			data->home = ft_calloc(1, ft_strlen(&env[i][5]) + 1);
+			ft_strlcpy(data->home, &env[i][5], ft_strlen(&env[i][5]) + 1);
+		}
+	}
 }
 
 char	**env_copy(char **envp)
@@ -60,12 +67,12 @@ void	init_readline(t_data *data)
 			add_history(data->prompt);
 			if (tokenization(data) == 1 && check_for_quotes(data->token) == 1)
 			{
-				check_var(data->token, data->env);
+				check_var(data->token, data->env, data);
 				read_prompt(data);
+				printf("perline: %s\n", data->perline);
+				free(data->perline);
 			}
 			free_list(data->token);
-			printf("perline: %s\n", data->perline);
-			free(data->perline);
 		}
 		free(data->prompt);
 	}

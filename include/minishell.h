@@ -12,7 +12,7 @@
 
 /* Characteres */
 # define METACHAR "<>| "
-# define VAR_STOPER " \'\"$"
+# define VAR_STOPER " \'\"/$"
 # define BLANK "\t\n\v\f\r "
 # define S_QUOTE '\''
 # define D_QUOTES '\"'
@@ -58,6 +58,7 @@ typedef struct s_pipex
 typedef struct s_data
 {
 	char	*prompt;
+	char	*home;
 	char	*perline;
 	char	**path;
 	char	**env_copy;
@@ -68,7 +69,7 @@ typedef struct s_data
 }			t_data;
 
 /* Init */
-void	copy_env(t_list **list, char **env);
+void	copy_env(t_list **list, char **env, t_data *data);
 char	**env_copy(char **envp);
 char	**save_path(char **envp);
 void	init_readline(t_data *data);
@@ -111,8 +112,9 @@ int		is_quoted(char c, int identifier);
 
 /* Fix input */
 int		check_for_quotes(t_list *token);
-void	check_var(t_list *token, t_list *env);
+void	check_var(t_list *token, t_list *env, t_data *data);
 char	*search_and_expand_var(char *str, t_list *env);
+void	check_tildes(t_list *token, char *home);
 char	*search_and_remove_quotes(char *str);
 
 /* Exec */
