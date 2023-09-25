@@ -12,6 +12,7 @@
 
 /* Characteres */
 # define METACHAR "<>| "
+# define VAR_STOPER " \'\"$"
 # define BLANK "\t\n\v\f\r "
 # define S_QUOTE '\''
 # define D_QUOTES '\"'
@@ -68,7 +69,7 @@ typedef struct s_data
 
 /* Init */
 void	copy_env(t_list **list, char **env);
-char 	**env_copy(char **envp);
+char	**env_copy(char **envp);
 char	**save_path(char **envp);
 void	init_readline(t_data *data);
 void	read_prompt(t_data *data);
@@ -106,6 +107,10 @@ void	change_value_in_var(t_data *data, t_var *node);
 int		tokenization(t_data *data);
 int		lex_analysis(t_data *data);
 int		syntax_analysis(int *lexer, int len);
+int		is_quoted(char c, int identifier);
+
+/* Fix input */
+void	fix_input(t_list *token, t_list *env);
 
 /* Exec */
 void	pipex(int argc, char **argv, char **envp);

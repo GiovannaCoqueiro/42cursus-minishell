@@ -6,7 +6,7 @@
 #    By: gcoqueir <gcoqueir@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/12 10:33:46 by bedos-sa          #+#    #+#              #
-#    Updated: 2023/09/20 07:26:13 by gcoqueir         ###   ########.fr        #
+#    Updated: 2023/09/20 09:25:48 by gcoqueir         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,6 +28,7 @@ SIG_DIR = signal/
 VAR_DIR = var/
 TOKEN_DIR = token/
 EXEC_DIR = exec/
+FIX_INPUT_DIR = fix_input/
 
 RM = rm -f
 FILES = main.c \
@@ -47,6 +48,7 @@ FILES = main.c \
 		$(EXEC_DIR)process.c \
 		$(EXEC_DIR)here_doc.c \
 		$(EXEC_DIR)free_and_finish.c \
+		$(FIX_INPUT_DIR)fix_input.c
 		
 OBJS = $(FILES:.c=.o)
 
@@ -64,6 +66,7 @@ mkdir_obj:
 	@mkdir -p $(OBJ_DIR)$(VAR_DIR)
 	@mkdir -p $(OBJ_DIR)$(TOKEN_DIR)
 	@mkdir -p $(OBJ_DIR)$(EXEC_DIR)
+	@mkdir -p $(OBJ_DIR)$(FIX_INPUT_DIR)
 
 $(NAME): $(addprefix $(OBJ_DIR), $(OBJS))
 	@make -C $(LIBFT) --silent

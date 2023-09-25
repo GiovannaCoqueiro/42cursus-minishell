@@ -2,7 +2,6 @@
 
 static int	token_len(char *token);
 static int	is_metachar(char c);
-static int	is_quoted(char c, int identifier);
 
 void	print_lex_and_token(t_data *data)
 {
@@ -96,7 +95,7 @@ static int	token_len(char *token)
 	return (i);
 }
 
-static int	is_quoted(char c, int identifier)
+int	is_quoted(char c, int identifier)
 {
 	if (identifier == 0)
 	{

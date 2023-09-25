@@ -44,7 +44,7 @@ static int	lexeme(char *token, t_data *data, int index)
 	}
 	if (get_pos(data->lexer, index) == 1 && is_builtin(token) == 1)
 		return (BUILTIN);
-	else if (get_pos(data->lexer, index) == 1 && ft_strchr(token, '=') == NULL)
+	else if (get_pos(data->lexer, index) == 1)
 		return (CMD);
 	return (ARG);
 }

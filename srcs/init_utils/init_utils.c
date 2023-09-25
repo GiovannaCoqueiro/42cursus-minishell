@@ -59,7 +59,10 @@ void	init_readline(t_data *data)
 		{
 			add_history(data->prompt);
 			if (tokenization(data) == 1)
+			{
+				fix_input(data->token, data->env);
 				read_prompt(data);
+			}
 			free_list(data->token);
 			free(data->perline);
 		}
@@ -93,19 +96,19 @@ void	teste(t_data *data)
 
 void	read_prompt(t_data *data)
 {
-	// if (ft_strcmp(data->prompt, "exit") == 0)
-	// 	exit_builtin(data);
-	// else if (ft_strcmp(data->prompt, "env") == 0)
-	// 	env_builtin(data);
-	// else if (ft_strcmp(data->prompt, "pwd") == 0)
-	// 	pwd_builtin();
-	// else if (ft_strncmp(data->prompt, "unset", 5) == 0)
-	// 	unset_builtin(data);
-	// else if (ft_strncmp(data->prompt, "export", 6) == 0)
-	// 	export_builtin(data);
-	// else if (ft_strcmp(data->prompt, "teste") == 0)
-	// 	teste(data);
-	// else if (ft_strchr(data->prompt, '=') != NULL)
+	if (ft_strcmp(data->prompt, "exit") == 0)
+		exit_builtin(data);
+	else if (ft_strcmp(data->prompt, "env") == 0)
+		env_builtin(data);
+	else if (ft_strcmp(data->prompt, "pwd") == 0)
+		pwd_builtin();
+	else if (ft_strncmp(data->prompt, "unset", 5) == 0)
+		unset_builtin(data);
+	else if (ft_strncmp(data->prompt, "export", 6) == 0)
+		export_builtin(data);
+	else if (ft_strcmp(data->prompt, "teste") == 0)
+		teste(data);
+	// if (ft_strchr(data->prompt, '=') != NULL)
 	// 	new_var(data);
 
 	t_list	*temp;
@@ -126,9 +129,10 @@ void	read_prompt(t_data *data)
 			str = ft_strjoin(buff, " ");
 			free(buff);
 		}
-		printf("%s\n", (char *)temp->content);
-		printf("%s\n", (char *)str);
+		// printf("%s\n", (char *)temp->content);
+		// printf("%s\n", (char *)str);
 		temp = temp->next;
 	}
 	data->perline = str;
+
 }

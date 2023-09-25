@@ -12,9 +12,6 @@ int	main(int argc, char **argv, char **envp)
 		data = ft_calloc(1, sizeof(t_data));
 		data->path = save_path(envp);
 		data->env_copy = env_copy(envp);
-		int i = -1;
-		while (data->env_copy[++i] != NULL)
-			printf("%s\n", data->env_copy[i]);
 		copy_env(&data->env, envp);
 		init_readline(data);
 		free_for_all(data);
