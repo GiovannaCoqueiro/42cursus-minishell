@@ -2,13 +2,14 @@
 # define MINISHELL_H
 
 # include "libft.h"
+# include <errno.h>
 # include <readline/history.h>
 # include <readline/readline.h>
-# include <stdio.h>
 # include <signal.h>
-# include <errno.h>
+# include <stdio.h>
 # include <string.h>
 # include <sys/wait.h>
+# include <sys/stat.h>
 
 /* Characteres */
 # define METACHAR "<>| "
@@ -27,7 +28,7 @@
 # define ERR_CTRLC 130
 
 /* Lexer */
-enum e_lexeme
+enum	e_lexeme
 {
 	INFILE = 1,
 	OUTFILE,
@@ -39,46 +40,31 @@ enum e_lexeme
 	ARG
 };
 
-typedef struct s_var
+typedef struct s_exec
 {
-	char			*str;
-	char			*key;
-	char			*value;
-	struct s_var	*next;
-}	t_var;
-
-typedef struct s_pipex
-{
-	int		infile;
-	int		outfile;
 	char	**cmd;
 	char	**all_paths;
-}			t_pipex;
+	char	**env;
+}			t_exec;
 
 typedef struct s_data
 {
 	char	*prompt;
 	char	*home;
-	char	*perline;
-	char	**path;
-	char	**env_copy;
 	t_list	*env;
-	t_var	*var;
 	t_list	*token;
 	int		*lexer;
+	t_exec	*exec;
 }			t_data;
 
 /* Init */
 void	copy_env(t_list **list, char **env, t_data *data);
-char	**env_copy(char **envp);
-char	**save_path(char **envp);
 void	init_readline(t_data *data);
-void	read_prompt(t_data *data);
+void	read_prompt(t_list *token, int *lexer, t_data *data);
 
 /* Free */
 void	free_for_all(t_data *data);
 void	free_list(t_list *list);
-void	free_var_list(t_var *var);
 
 /* Builtin */
 void	exit_builtin(t_data *data);
@@ -95,15 +81,6 @@ void	signal_handler(int signal);
 void	signal_ignore(void);
 void	signal_default(void);
 
-/* Var */
-t_var	*set_var(char *str);
-void	new_var(t_data *data);
-void	var_add_back(t_var **lst, t_var *new);
-t_list	*find_env(t_data *data);
-t_var	*find_var(t_data *data);
-void	change_value_in_env(t_data *data, t_list *node);
-void	change_value_in_var(t_data *data, t_var *node);
-
 /* Token and syntax*/
 int		tokenization(t_data *data);
 int		lex_analysis(t_data *data);
@@ -118,12 +95,10 @@ void	check_tildes(t_list *token, char *home);
 char	*search_and_remove_quotes(char *str);
 
 /* Exec */
-void	pipex(int argc, char **argv, char **envp);
-void	make_cmd(char **envp, char *command, t_pipex *pipex);
-void	cmd_search(char **envp, t_pipex *pipex);
-void	free_tab(char **tab);
-void	error_check(int i, t_pipex *pipex);
-void	pipe_it(char *cmd, char **envp, t_pipex *pipex);
-void	here_doc(char *end_msg, t_pipex *pipex);
+void	prepare_exec(t_list *token, int len, t_data *data);
+void	execute(t_exec *exec);
+void	pipe_it(t_exec *exec);
+void	error_check(t_exec *exec);
+void	here_doc(char *end_msg, t_exec *exec);
 
 #endif

@@ -54,12 +54,8 @@ int	tokenization(t_data *data)
 		i += len - 1;
 	}
 	if (lex_analysis(data) == 0)
-	{
-		free(data->lexer);
 		return (0);
-	}
 	// print_lex_and_token(data);
-	free(data->lexer);
 	return (1);
 }
 

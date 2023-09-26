@@ -1,31 +1,21 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   process.c                                          :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: gcoqueir <gcoqueir@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/08/08 07:47:27 by gcoqueir          #+#    #+#             */
-/*   Updated: 2023/09/19 13:57:02 by gcoqueir         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "minishell.h"
 
-static void	child(int *fd, char *cmd, char **envp, t_pipex *pipex);
+static void	child(int *fd, t_exec *exec);
+static void	make_cmd(t_exec *exec);
+static void	cmd_search(t_exec *exec);
 
-void	pipe_it(char *cmd, char **envp, t_pipex *pipex)
+void	pipe_it(t_exec *exec)
 {
 	int		fd[2];
 	pid_t	pid;
 
 	if (pipe(fd) == -1)
-		error_check(4, pipex);
+		error_check(exec);
 	pid = fork();
 	if (pid == -1)
-		error_check(4, pipex);
+		error_check(exec);
 	if (pid == 0)
-		child(fd, cmd, envp, pipex);
+		child(fd, exec);
 	else
 	{
 		dup2(fd[0], STDIN_FILENO);
@@ -34,46 +24,46 @@ void	pipe_it(char *cmd, char **envp, t_pipex *pipex)
 	}
 }
 
-static void	child(int *fd, char *cmd, char **envp, t_pipex *pipex)
+static void	child(int *fd, t_exec *exec)
 {
 	dup2(fd[1], STDOUT_FILENO);
 	close(fd[0]);
-	make_cmd(envp, cmd, pipex);
+	make_cmd(exec);
 }
 
-void	make_cmd(char **envp, char *command, t_pipex *pipex)
+static void	make_cmd(t_exec *exec)
 {
-	int		i;
+	struct stat	file_info;
 
-	pipex->cmd = ft_split(command, ' ');
-	i = -1;
-	while (pipex->cmd[++i] != NULL)
-		pipex->cmd[i] = ft_strtrim(pipex->cmd[i], "'");
-	if (ft_strchr(pipex->cmd[0], '/') != NULL)
-		if (execve(pipex->cmd[0], pipex->cmd, envp) == -1)
-			error_check(4, pipex);
-	cmd_search(envp, pipex);
+	if (stat(exec->cmd[0], &file_info) == 0)
+		if (access(*exec->cmd, X_OK) == 0)
+			printf("a\n");
+			// if (execve(exec->cmd[0], exec->cmd, exec->env) == -1)
+			// 	error_check(exec);
+	cmd_search(exec);
 }
 
-void	cmd_search(char **envp, t_pipex *pipex)
+static void	cmd_search(t_exec *exec)
 {
 	int		i;
 	char	*temp;
 
 	i = -1;
-	while (pipex->all_paths[++i] != NULL)
+	while (exec->all_paths[++i] != NULL)
 	{
-		temp = ft_strjoin(pipex->all_paths[i], pipex->cmd[0]);
+		temp = ft_strjoin(exec->all_paths[i], exec->cmd[0]);
 		if (access(temp, F_OK) == 0)
 		{
-			if (execve(temp, pipex->cmd, envp) == -1)
-			{
-				free(temp);
-				error_check(4, pipex);
-			}
+			if (access(*exec->cmd, X_OK) == 0)
+				printf("b\n");
+			// if (execve(temp, exec->cmd, exec->env) == -1)
+			// {
+			// 	free(temp);
+			// 	error_check(exec);
+			// }
 		}
 		free(temp);
 	}
-	if (pipex->all_paths[i] == NULL)
-		error_check(3, pipex);
+	if (exec->all_paths[i] == NULL)
+		error_check(exec);
 }

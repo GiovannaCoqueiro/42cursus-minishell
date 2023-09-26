@@ -3,7 +3,6 @@
 static int	lexeme(char *token, t_data *data, int index);
 static int	is_builtin(char *token);
 static int	get_pos(int *lexer, int index);
-// static int	is_cmd(char *token, char **path);
 
 int	lex_analysis(t_data *data)
 {
@@ -87,35 +86,3 @@ static int	is_builtin(char *token)
 		return (1);
 	return (0);
 }
-
-// char	*make_tokens_str(t_list *token)
-// {
-// 	if ()
-// }
-
-// static int	is_cmd(char *token, char **path)
-// {
-// 	int		i;
-// 	char	*temp;
-// 	char	*buffer;
-
-// 	if (access(token, X_OK) == 0)
-// 		return (1);
-// 	i = -1;
-// 	while (path[++i] != NULL)
-// 	{
-// 		buffer = ft_strjoin("/", token);
-// 		temp = ft_strjoin(path[i], buffer);
-
-// 		printf("%s\n", temp);
-// 		if (access(temp, X_OK) == 0)
-// 		{
-// 			free(temp);
-// 			free(buffer);
-// 			return (1);
-// 		}
-// 		free(temp);
-// 		free(buffer);
-// 	}
-// 	return (0);
-// }

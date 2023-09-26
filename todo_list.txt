@@ -1,11 +1,6 @@
--- expansão de variavel
-    - procurar por '$'
-    - procurar na lista de variáveis pela variável passada
-    - substituir a $key pelo valor
-    - ignorar a expansão caso o '$' esteja entre aspas simples 
-echo USER $USER "$USER" "$USER $USER" "$USER " '$USER' "'$USER'" $$ $USER'' $AAA "$AAA'ASSAA" $MFLAGS AAAA"$MFLAGS"AA "$"USER"" $"USER" ~ ~/ "~" '~' ~sad sad~
-
 -- exec
+
+-- redirects
 
 -- exit code
 
