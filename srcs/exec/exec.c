@@ -2,10 +2,13 @@
 
 static char	**turn_env_to_arr(t_list *env);
 static void	take_paths(char **env, t_exec *exec);
+static void	make_cmd(t_exec *exec);
+static void	cmd_search(t_exec *exec);
 // static int	open_file(char *file, int mode, t_exec *exec);
 
 void	prepare_exec(t_list *token, int len, t_data *data)
 {
+	pid_t	pid;
 	int		i;
 	t_exec	exec;
 
@@ -19,13 +22,12 @@ void	prepare_exec(t_list *token, int len, t_data *data)
 	}
 	exec.cmd[i] = NULL;
 	exec.env = turn_env_to_arr(data->env);
-	execute(&exec);
-}
 
-void	execute(t_exec *exec)
-{
-	take_paths(exec->env, exec);
-	pipe_it(exec);
+	take_paths(exec.env, &exec);
+	pid = fork();
+	if (pid == 0)
+		make_cmd(&exec);
+	// pipe_it(exec);
 }
 
 static char	**turn_env_to_arr(t_list *env)
@@ -70,6 +72,47 @@ static void	take_paths(char **env, t_exec *exec)
 	exec->all_paths[i] = NULL;
 	ft_free_str_arr(temp);
 }
+
+static void	make_cmd(t_exec *exec)
+{
+	struct stat	file_info;
+
+	if (stat(exec->cmd[0], &file_info) == 0)
+	{
+		if (access(*exec->cmd, X_OK) == 0)
+			if (execve(exec->cmd[0], exec->cmd, exec->env) == -1)
+				error_check(exec);
+	}
+	else
+		cmd_search(exec);
+}
+
+static void	cmd_search(t_exec *exec)
+{
+	int		i;
+	char	*temp;
+
+	i = -1;
+	while (exec->all_paths[++i] != NULL)
+	{
+		temp = ft_strjoin(exec->all_paths[i], exec->cmd[0]);
+		if (access(temp, F_OK) == 0)
+		{
+			if (access(temp, X_OK) == 0)
+			{
+				if (execve(temp, exec->cmd, exec->env) == -1)
+				{
+					free(temp);
+					error_check(exec);
+				}
+			}
+		}
+		free(temp);
+	}
+	if (exec->all_paths[i] == NULL)
+		error_check(exec);
+}
+
 
 // static int	open_file(char *file, int mode, t_exec *exec)
 // {

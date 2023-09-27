@@ -3,6 +3,7 @@
 static int	lexeme(char *token, t_data *data, int index);
 static int	is_builtin(char *token);
 static int	get_pos(int *lexer, int index);
+static int	check_cmd(int *lexer, int index);
 
 int	lex_analysis(t_data *data)
 {
@@ -54,6 +55,8 @@ static int	get_pos(int *lexer, int index)
 		return (1);
 	if (lexer[index - 1] == PIPE)
 		return (1);
+	if (check_cmd(lexer, index) == 0)
+		return (0);
 	if (index - 2 >= 0)
 	{
 		if (lexer[index - 2] == HEREDOC)
@@ -66,6 +69,21 @@ static int	get_pos(int *lexer, int index)
 			return (1);
 	}
 	return (0);
+}
+
+static int	check_cmd(int *lexer, int index)
+{
+	int	cmd_check;
+
+	cmd_check = 0;
+	while (--index >= 0)
+	{
+		if (lexer[index] == PIPE)
+			return (1);
+		else if (lexer[index] == CMD || lexer[index] == BUILTIN)
+			return (0);
+	}
+	return (1);
 }
 
 static int	is_builtin(char *token)

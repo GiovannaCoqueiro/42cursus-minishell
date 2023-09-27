@@ -34,7 +34,7 @@ void	init_readline(t_data *data)
 			if (tokenization(data) == 1 && check_for_quotes(data->token) == 1)
 			{
 				check_var(data->token, data->env, data);
-				read_prompt(data->token, data->lexer, data);
+				// read_prompt(data->token, data->lexer, data);
 			}
 			free(data->lexer);
 			free_list(data->token);
