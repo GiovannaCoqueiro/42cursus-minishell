@@ -1,34 +1,6 @@
 #include "minishell.h"
 
 static char	**turn_env_to_arr(t_list *env);
-static void	take_paths(char **env, t_exec *exec);
-static void	make_cmd(t_exec *exec);
-static void	cmd_search(t_exec *exec);
-// static int	open_file(char *file, int mode, t_exec *exec);
-
-void	prepare_exec(t_list *token, int len, t_data *data)
-{
-	pid_t	pid;
-	int		i;
-	t_exec	exec;
-
-	exec.cmd = ft_calloc(sizeof(char *), len + 1);
-	i = -1;
-	while (++i < len)
-	{
-		exec.cmd[i] = ft_calloc(sizeof(char), ft_strlen(token->content) + 1);
-		ft_strlcpy(exec.cmd[i], token->content, ft_strlen(token->content) + 1);
-		token = token->next;
-	}
-	exec.cmd[i] = NULL;
-	exec.env = turn_env_to_arr(data->env);
-
-	take_paths(exec.env, &exec);
-	pid = fork();
-	if (pid == 0)
-		make_cmd(&exec);
-	// pipe_it(exec);
-}
 
 static char	**turn_env_to_arr(t_list *env)
 {
@@ -48,10 +20,77 @@ static char	**turn_env_to_arr(t_list *env)
 	return (arr);
 }
 
-static void	take_paths(char **env, t_exec *exec)
+void	execute(t_data *data, t_exec *exec)
+{
+	t_args	args;
+
+	args.cmd_count = exec->cmd_count;
+	args.env = turn_env_to_arr(data->env);
+	args.exec = exec;
+	data->args = &args;
+	args.i = 0;
+	pipe(args.pipis);
+	pipe(args.pipes);
+	commands_fork(&args, data);
+	close_pipes(&args);
+	ft_free_str_arr(args.env);
+}
+
+void	commands_fork(t_args *args, t_data *data)
+{
+	pid_t	*pids;
+	int 	i;
+
+	pids = ft_calloc(sizeof(int), args->cmd_count);
+	while (args->i <= args->cmd_count)
+	{
+
+		pids[args->i] = fork();
+		if (pids[args->i] == 0)
+		{
+			args->path = find_path(args->env);
+			if (args->i == args->cmd_count)
+				last_command(args);
+			else if (args->i == 0)
+				first_command(args);
+			else
+				middle_command(args);
+			close_pipes(args);
+			try_paths(args);
+			free_str_arrs(args->path);
+			ft_putstr_fd("pipex: command not found\n", 2);
+			free(pids);
+			free_for_all(data);
+			exit(errno);
+		}
+		if (args->cmd_count == 1)
+			wait(NULL);
+		recycle_pipe(args);
+		args->i++;
+		args->exec = args->exec->next;
+	}
+	i = 0;
+	while(i < args->cmd_count)
+	{
+		waitpid(pids[i], NULL, 0);
+		i++;
+	}
+	free(pids);
+}
+
+void	close_pipes(t_args *args)
+{
+	close(args->pipis[0]);
+	close(args->pipis[1]);
+	close(args->pipes[0]);
+	close(args->pipes[1]);
+}
+
+char	**find_path(char **env)
 {
 	int		i;
 	char	**temp;
+	char	**paths;
 
 	i = 0;
 	while (env[i] != NULL && ft_strncmp("PATH=", env[i], 5) != 0)
@@ -60,77 +99,90 @@ static void	take_paths(char **env, t_exec *exec)
 	i = 0;
 	while (temp[i] != NULL)
 		i++;
-	exec->all_paths = malloc(sizeof(char *) * (i + 1));
-	if (exec->all_paths == NULL)
-	{
-		ft_free_str_arr(temp);
-		exit(1);
-	}
+	paths = ft_calloc(sizeof(char *), (i + 1));
 	i = -1;
 	while (temp[++i] != NULL)
-		exec->all_paths[i] = ft_strjoin(temp[i], "/");
-	exec->all_paths[i] = NULL;
+		paths[i] = ft_strjoin(temp[i], "/");
+	paths[i] = NULL;
 	ft_free_str_arr(temp);
+	return (paths);
 }
 
-static void	make_cmd(t_exec *exec)
-{
-	struct stat	file_info;
-
-	if (stat(exec->cmd[0], &file_info) == 0)
-	{
-		if (access(*exec->cmd, X_OK) == 0)
-			if (execve(exec->cmd[0], exec->cmd, exec->env) == -1)
-				error_check(exec);
-	}
-	else
-		cmd_search(exec);
-}
-
-static void	cmd_search(t_exec *exec)
+void	try_paths(t_args *args)
 {
 	int		i;
-	char	*temp;
+	int		strlen;
+	char	*copy;
 
-	i = -1;
-	while (exec->all_paths[++i] != NULL)
+	if (access(args->exec->cmd[0], F_OK) == 0)
+		execve(args->exec->cmd[0], args->exec->cmd, args->env);
+	i = 0;
+	while (args->path[i])
 	{
-		temp = ft_strjoin(exec->all_paths[i], exec->cmd[0]);
-		if (access(temp, F_OK) == 0)
-		{
-			if (access(temp, X_OK) == 0)
-			{
-				if (execve(temp, exec->cmd, exec->env) == -1)
-				{
-					free(temp);
-					error_check(exec);
-				}
-			}
-		}
-		free(temp);
+		strlen = ft_strlen(args->path[i]) + ft_strlen(args->exec->cmd[0]) + 2;
+		copy = ft_calloc(strlen, sizeof(char));
+		ft_strlcat(copy, args->path[i], strlen);
+		ft_strlcat(copy, "/", strlen);
+		ft_strlcat(copy, args->exec->cmd[0], strlen);
+		if (access(copy, F_OK) == 0)
+			execve(copy, args->exec->cmd, args->env);
+		free(copy);
+		i++;
 	}
-	if (exec->all_paths[i] == NULL)
-		error_check(exec);
 }
 
+void	free_str_arrs(char **arr)
+{
+	int	j;
 
-// static int	open_file(char *file, int mode, t_exec *exec)
-// {
-// 	int	fd;
+	j = 0;
+	while (arr[j])
+	{
+		free(arr[j]);
+		j++;
+	}
+	free(arr);
+}
 
-// 	if (mode == 1)
-// 		fd = open(file, O_RDONLY);
-// 	else if (mode == 2)
-// 		fd = open(file, O_TRUNC | O_CREAT | O_WRONLY, 0777);
-// 	else
-// 		fd = open(file, O_APPEND | O_CREAT | O_WRONLY, 0777);
-// 	if (fd == -1)
-// 	{
-// 		if (mode == 2)
-// 			close(exec->infile);
-// 		perror("Error");
-// 		exit(1);
-// 	}
-// 	return (fd);
-// }
+void	recycle_pipe(t_args *args)
+{
+	if (args->i % 2 == 0)
+	{
+		close(args->pipes[0]);
+		close(args->pipes[1]);
+		pipe(args->pipes);
+	}
+	else
+	{
+		close(args->pipis[0]);
+		close(args->pipis[1]);
+		pipe(args->pipis);
+	}
+}
 
+void	first_command(t_args *args)
+{
+	dup2(args->pipis[1], 1);
+}
+
+void	middle_command(t_args *args)
+{
+	if (args->i % 2 == 0)
+	{
+		dup2(args->pipes[0], 0);
+		dup2(args->pipis[1], 1);
+	}
+	else
+	{
+		dup2(args->pipis[0], 0);
+		dup2(args->pipes[1], 1);
+	}
+}
+
+void	last_command(t_args *args)
+{
+	if (args->i % 2 == 0)
+		dup2(args->pipes[0], 0);
+	else
+		dup2(args->pipis[0], 0);
+}

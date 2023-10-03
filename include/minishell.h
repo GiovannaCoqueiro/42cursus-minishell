@@ -42,10 +42,22 @@ enum	e_lexeme
 
 typedef struct s_exec
 {
-	char	**cmd;
-	char	**all_paths;
-	char	**env;
+	char			**cmd;
+	int				cmd_count;
+	struct s_exec	*next;
 }			t_exec;
+
+typedef struct t_args
+{
+	int		i;
+	int		cmd_count;
+	int		last_pi;
+	int		pipis[2];
+	int		pipes[2];
+	char	**path;
+	char	**env;
+	t_exec	*exec;
+}			t_args;
 
 typedef struct s_data
 {
@@ -55,6 +67,9 @@ typedef struct s_data
 	t_list	*token;
 	int		*lexer;
 	t_exec	*exec;
+	t_args	*args;
+	int		exit_status;
+
 }			t_data;
 
 /* Init */
@@ -65,6 +80,8 @@ void	read_prompt(t_list *token, int *lexer, t_data *data);
 /* Free */
 void	free_for_all(t_data *data);
 void	free_list(t_list *list);
+void	free_exec(t_exec *exec);
+void	free_args(t_args *args);
 
 /* Builtin */
 void	exit_builtin(t_data *data);
@@ -95,10 +112,23 @@ void	check_tildes(t_list *token, char *home);
 char	*search_and_remove_quotes(char *str);
 
 /* Exec */
-void	prepare_exec(t_list *token, int len, t_data *data);
-void	execute(t_exec *exec);
+void	prepare_exec(t_data *data);
+void	open_pipe(int *fd, t_exec *exec, t_data *data, int cmd_count);
 void	pipe_it(t_exec *exec);
-void	error_check(t_exec *exec);
+void	make_cmd(t_exec *exec, t_data *data);
+void	error_check(t_exec *exec, t_data *data);
 void	here_doc(char *end_msg, t_exec *exec);
+
+/* Pipex */
+void	execute(t_data *data, t_exec *exec);
+char	**find_path(char **env);
+void	try_paths(t_args *t_args);
+void	free_str_arrs(char **arr);
+void	commands_fork(t_args *args, t_data *data);
+void	first_command(t_args *args);
+void	middle_command(t_args *args);
+void	last_command(t_args *args);
+void	close_pipes(t_args *args);
+void	recycle_pipe(t_args *args);
 
 #endif

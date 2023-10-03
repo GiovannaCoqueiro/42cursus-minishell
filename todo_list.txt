@@ -1,8 +1,16 @@
 -- exec
+    - abrir todos os filhos em looping de uma vez e fazer o processo pai esperar por eles acabarem
 
 -- redirects
+    - se houver varios redirects de entrada, consideramos apenas o ultimo, mas se algum anterior der erro, retornamos erro
+    - se houver varios redirects de saida, criamos todos mas consideramos apenas o ultimo
 
 -- exit code
 
 -- terminar builtins
 
+
+
+-- parsear o token até o final, e contar os comandos
+-- fazer a junção dos comandos com os argumentos que o acompanham em um array ou uma lista
+-- criar um looping pra abrir ospipes e os forks dos processos filhos e executar-los

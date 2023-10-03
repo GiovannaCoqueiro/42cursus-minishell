@@ -13,7 +13,20 @@ void	free_for_all(t_data	*data)
 		free(data->lexer);
 	if (data->home != NULL)
 		free(data->home);
+	free_exec(data->exec);
+	free_args(data->args);
 	free(data);
+}
+
+void	free_args(t_args *args)
+{
+	if (args != NULL)
+	{
+		if (args->path != NULL)
+			ft_free_str_arr(args->path);
+		if (args->env != NULL)
+			ft_free_str_arr(args->env);
+	}
 }
 
 void	free_list(t_list *list)
@@ -28,5 +41,20 @@ void	free_list(t_list *list)
 			free(temp->content);
 		free(temp);
 		temp = list;
+	}
+}
+
+void	free_exec(t_exec *exec)
+{
+	t_exec	*temp;
+
+	temp = exec;
+	while (temp != NULL)
+	{
+		exec = exec->next;
+		if (temp->cmd)
+			ft_free_str_arr(temp->cmd);
+		free(temp);
+		temp = exec;
 	}
 }

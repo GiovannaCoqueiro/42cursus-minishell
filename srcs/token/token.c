@@ -41,6 +41,11 @@ int	tokenization(t_data *data)
 	int		i;
 	int		len;
 
+	i = 0;
+	while (ft_strchr(BLANK, data->prompt[i]) != NULL && data->prompt[i] != '\0')
+		i++;
+	if (data->prompt[i] == '\0')
+		return (0);
 	i = -1;
 	while (data->prompt[++i] != '\0')
 	{
@@ -55,7 +60,7 @@ int	tokenization(t_data *data)
 	}
 	if (lex_analysis(data) == 0)
 		return (0);
-	print_lex_and_token(data);
+	// print_lex_and_token(data);
 	return (1);
 }
 

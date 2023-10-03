@@ -21,7 +21,6 @@
 // 		close(fd[1]);
 // 		waitpid(pid, NULL, WNOHANG);
 // 	}
-// 	// make_cmd(exec);
 // }
 
 // static void	child(int *fd, t_exec *exec)
