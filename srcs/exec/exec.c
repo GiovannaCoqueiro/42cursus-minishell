@@ -42,21 +42,21 @@ void	commands_fork(t_args *args, t_data *data)
 	int 	i;
 
 	pids = ft_calloc(sizeof(int), args->cmd_count);
-	while (args->i <= args->cmd_count)
+	while (args->i <= args->cmd_count - 1)
 	{
 
 		pids[args->i] = fork();
 		if (pids[args->i] == 0)
 		{
 			args->path = find_path(args->env);
-			if (args->i == args->cmd_count)
+			if (args->i == args->cmd_count - 1)
 				last_command(args);
 			else if (args->i == 0)
 				first_command(args);
 			else
 				middle_command(args);
 			close_pipes(args);
-			try_paths(args);
+			make_cmd(args);
 			free_str_arrs(args->path);
 			ft_putstr_fd("pipex: command not found\n", 2);
 			free(pids);
@@ -106,6 +106,35 @@ char	**find_path(char **env)
 	paths[i] = NULL;
 	ft_free_str_arr(temp);
 	return (paths);
+}
+
+void	make_cmd(t_args *args)
+{
+	struct stat	file_info;
+
+	if (stat(args->exec->cmd[0], &file_info) == 0)
+	{
+		if (access(args->exec->cmd[0], X_OK) == 0)
+			execve(args->exec->cmd[0], args->exec->cmd, args->env);
+	}
+	else
+		cmd_search(args);
+}
+
+void	cmd_search(t_args *args)
+{
+	int		i;
+	char	*temp;
+
+	i = -1;
+	while (args->path[++i] != NULL)
+	{
+		temp = ft_strjoin(args->path[i], args->exec->cmd[0]);
+		if (access(temp, F_OK) == 0)
+			if (access(temp, X_OK) == 0)
+				execve(temp, args->exec->cmd, args->env);
+		free(temp);
+	}
 }
 
 void	try_paths(t_args *args)

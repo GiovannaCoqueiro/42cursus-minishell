@@ -25,7 +25,7 @@ void	init_readline(t_data *data)
 	{
 		data->token = NULL;
 		data->lexer = NULL;
-		data->prompt = readline("gibi> ");
+		data->prompt = readline("\033[1;35mgibi>\033[0m ");
 		if (data->prompt == NULL)
 		{
 			ft_putendl_fd("exit", 1);
@@ -58,6 +58,7 @@ void	read_prompt(t_list *token, int *lexer, t_data *data)
 	list_len = ft_lstsize(token);
 	i = 0;
 	exec = ft_calloc(1, sizeof(t_exec));
+	data->exec = exec;
 	exec->cmd_count = 0;
 	while (i < list_len)
 	{
@@ -76,8 +77,7 @@ void	read_prompt(t_list *token, int *lexer, t_data *data)
 		token = token->next;
 		i++;
 	}
-	execute(data, exec);
-	free_exec(exec);
+	execute(data, data->exec);
 	// int fd[2];
 	// if (pipe(fd) == -1)
 	// 	error_check(exec, data);

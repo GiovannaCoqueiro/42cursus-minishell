@@ -115,8 +115,8 @@ char	*search_and_remove_quotes(char *str);
 void	prepare_exec(t_data *data);
 void	open_pipe(int *fd, t_exec *exec, t_data *data, int cmd_count);
 void	pipe_it(t_exec *exec);
-void	make_cmd(t_exec *exec, t_data *data);
-void	error_check(t_exec *exec, t_data *data);
+void	make_cmd(t_args *args);
+void	cmd_search(t_args *args);
 void	here_doc(char *end_msg, t_exec *exec);
 
 /* Pipex */

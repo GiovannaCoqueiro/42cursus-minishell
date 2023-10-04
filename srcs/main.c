@@ -10,7 +10,6 @@ int	main(int argc, char **argv, char **envp)
 		// signal(SIGINT, signal_handler);
 		signal(SIGQUIT, SIG_IGN);
 		data = ft_calloc(1, sizeof(t_data));
-		// data->path = save_path(envp);
 		copy_env(&data->env, envp, data);
 		init_readline(data);
 		free_for_all(data);
