@@ -1,7 +1,7 @@
 #include "minishell.h"
 
-static t_exec	*create_cmd_arr(t_list *token, int len);
-static void		exec_addback(t_exec **exec, t_exec *node);
+t_exec	*create_cmd_arr(t_list *token, int len);
+void		exec_addback(t_exec **exec, t_exec *node);
 
 void	copy_env(t_list **list, char **env, t_data *data)
 {
@@ -53,23 +53,23 @@ void	read_prompt(t_list *token, int *lexer, t_data *data)
 	int		i;
 	int		buffer;
 	int		list_len;
-	t_exec	*exec;
+	t_list	*temp;
 
 	list_len = ft_lstsize(token);
 	i = 0;
-	exec = ft_calloc(1, sizeof(t_exec));
-	data->exec = exec;
-	exec->cmd_count = 0;
+	data->exec = ft_calloc(1, sizeof(t_exec));
+	data->cmd_count = 0;
+	temp = token;
 	while (i < list_len)
 	{
 		if (lexer[i] == CMD || lexer[i] == BUILTIN)
 		{
-			exec->cmd_count++;
+			data->cmd_count++;
 			buffer = i;
 			i++;
 			while (i < list_len && lexer[i] == ARG)
 				i++;
-			exec_addback(&exec, create_cmd_arr(token, i - buffer));
+			exec_addback(&data->exec, create_cmd_arr(token, i - buffer));
 			i--;
 			while (buffer++ < i)
 				token = token->next;
@@ -77,22 +77,18 @@ void	read_prompt(t_list *token, int *lexer, t_data *data)
 		token = token->next;
 		i++;
 	}
-	execute(data, data->exec);
-	// int fd[2];
-	// if (pipe(fd) == -1)
-	// 	error_check(exec, data);
-	// prepare_exec(data);
-	// while (cmd_count > 0)
+	// t_exec *test = data->exec;
+	// while (test != NULL)
 	// {
-	// 	open_pipe(fd, exec, data, cmd_count);
-	// 	cmd_count--;
-	// 	exec = exec->next;
+	// 	int j = -1;
+	// 	while (test->cmd[++j] != NULL)
+	// 		printf("%s\n", test->cmd[j]);
+	// 	test = test->next;
 	// }
-	// dup2(1, STDOUT_FILENO);
-	// make_cmd(exec, data);
+	execute(data, data->exec);
 }
 
-static t_exec	*create_cmd_arr(t_list *token, int len)
+t_exec	*create_cmd_arr(t_list *token, int len)
 {
 	t_exec	*exec;
 	int		i;
@@ -110,12 +106,12 @@ static t_exec	*create_cmd_arr(t_list *token, int len)
 	return (exec);
 }
 
-static void	exec_addback(t_exec **exec, t_exec *node)
+void	exec_addback(t_exec **exec, t_exec *node)
 {
 	t_exec	*temp;
 
 	temp = *exec;
-	if (*exec == NULL)
+	if (temp->cmd == NULL)
 		*exec = node;
 	else
 	{

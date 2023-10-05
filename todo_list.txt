@@ -14,3 +14,4 @@
 -- parsear o token até o final, e contar os comandos
 -- fazer a junção dos comandos com os argumentos que o acompanham em um array ou uma lista
 -- criar um looping pra abrir os pipes e os forks dos processos filhos e executar-los
+"\033[0;35mgibi>\033[0m "

@@ -6,7 +6,7 @@
 #    By: gcoqueir <gcoqueir@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/12 10:33:46 by bedos-sa          #+#    #+#              #
-#    Updated: 2023/10/04 13:23:43 by gcoqueir         ###   ########.fr        #
+#    Updated: 2023/10/04 18:04:45 by gcoqueir         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -47,6 +47,8 @@ FILES = main.c \
 		$(FIX_INPUT_DIR)check_quotes.c \
 		$(FIX_INPUT_DIR)check_tildes.c \
 		$(EXEC_DIR)exec.c \
+		$(EXEC_DIR)child_dups.c \
+		$(EXEC_DIR)pipes.c \
 		$(EXEC_DIR)here_doc.c
 		
 OBJS = $(FILES:.c=.o)
