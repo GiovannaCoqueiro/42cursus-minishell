@@ -54,10 +54,12 @@ void	read_prompt(t_list *token, int *lexer, t_data *data)
 	int		buffer;
 	int		list_len;
 	t_list	*temp;
+	t_exec	exec;
 
 	list_len = ft_lstsize(token);
 	i = 0;
-	data->exec = ft_calloc(1, sizeof(t_exec));
+	exec.cmd = NULL;
+	data->exec = &exec;
 	data->cmd_count = 0;
 	temp = token;
 	while (i < list_len)
@@ -86,6 +88,7 @@ void	read_prompt(t_list *token, int *lexer, t_data *data)
 	// 	test = test->next;
 	// }
 	execute(data, data->exec);
+	free_exec(data->exec);
 }
 
 t_exec	*create_cmd_arr(t_list *token, int len)

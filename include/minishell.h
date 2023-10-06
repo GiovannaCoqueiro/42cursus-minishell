@@ -81,7 +81,6 @@ void	read_prompt(t_list *token, int *lexer, t_data *data);
 void	free_for_all(t_data *data);
 void	free_list(t_list *list);
 void	free_exec(t_exec *exec);
-void	free_args(t_args *args);
 
 /* Builtin */
 void	exit_builtin(t_data *data);
@@ -110,14 +109,6 @@ void	check_var(t_list *token, t_list *env, t_data *data);
 char	*search_and_expand_var(char *str, t_list *env);
 void	check_tildes(t_list *token, char *home);
 char	*search_and_remove_quotes(char *str);
-
-/* Exec */
-void	prepare_exec(t_data *data);
-void	open_pipe(int *fd, t_exec *exec, t_data *data, int cmd_count);
-void	pipe_it(t_exec *exec);
-void	make_cmd(t_args *args);
-void	cmd_search(t_args *args);
-void	here_doc(char *end_msg, t_exec *exec);
 
 /* Pipex */
 void	execute(t_data *data, t_exec *exec);

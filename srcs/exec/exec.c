@@ -2,8 +2,8 @@
 
 static char	**turn_env_to_arr(t_list *env);
 static void	commands_fork(t_args *args, t_data *data);
-static void	find_path(char **env, t_args *args);
-static void	try_paths(t_args *args);
+static char	**find_path(char **env);
+static void	try_paths(t_args *args, char **path);
 
 void	execute(t_data *data, t_exec *exec)
 {
@@ -42,6 +42,7 @@ static char	**turn_env_to_arr(t_list *env)
 static void	commands_fork(t_args *args, t_data *data)
 {
 	pid_t	*pids;
+	char	**path;
 	int 	i;
 
 	pids = ft_calloc(sizeof(int), args->cmd_count);
@@ -50,22 +51,22 @@ static void	commands_fork(t_args *args, t_data *data)
 		pids[args->i] = fork();
 		if (pids[args->i] == 0)
 		{
-			find_path(args->env, args);
-			if (args->cmd_count > 1)
-			{
-				if (args->i == args->cmd_count - 1)
-					last_command(args);
-				else if (args->i == 0)
-					first_command(args);
-				else
-					middle_command(args);
-			}
-			close_pipes(args);
-			try_paths(args);
-			ft_putstr_fd(": command not found\n", 2);
-			free(pids);
-			free_for_all(data);
-			exit(errno);
+				path = find_path(args->env);
+				if (args->cmd_count > 1)
+				{
+					if (args->i == args->cmd_count - 1)
+						last_command(args);
+					else if (args->i == 0)
+						first_command(args);
+					else
+						middle_command(args);
+				}
+				close_pipes(args);
+				try_paths(args, path);
+				ft_putstr_fd("gibi: command not found\n", 2);
+				free(pids);
+				free_for_all(data);
+				exit(errno);
 		}
 		if (args->cmd_count == 1)
 			wait(NULL);
@@ -82,32 +83,29 @@ static void	commands_fork(t_args *args, t_data *data)
 	free(pids);
 }
 
-static void	find_path(char **env, t_args *args)
+char    **find_path(char **env)
 {
-	int		i;
-	char	**temp;
+    int        i;
+    char    **temp;
+    char    **paths;
 
-	i = 0;
-	while (env[i] != NULL && ft_strncmp("PATH=", env[i], 5) != 0)
-		i++;
-	temp = ft_split(&env[i][5], ':');
-	i = 0;
-	while (temp[i] != NULL)
-		i++;
-	args->path = malloc(sizeof(char *) * (i + 1));
-	if (args->path == NULL)
-	{
-		ft_free_str_arr(&temp);
-		exit(1);
-	}
-	i = -1;
-	while (temp[++i] != NULL)
-		args->path[i] = ft_strjoin(temp[i], "/");
-	args->path[i] = NULL;
-	ft_free_str_arr(&temp);
+    i = 0;
+    while (env[i] != NULL && ft_strncmp("PATH=", env[i], 5) != 0)
+        i++;
+    temp = ft_split(&env[i][5], ':');
+    i = 0;
+    while (temp[i] != NULL)
+        i++;
+    paths = ft_calloc(sizeof(char *), (i + 1));
+    i = -1;
+    while (temp[++i] != NULL)
+        paths[i] = ft_strjoin(temp[i], "/");
+    paths[i] = NULL;
+    ft_free_str_arr(&temp);
+    return (paths);
 }
 
-static void	try_paths(t_args *args)
+static void	try_paths(t_args *args, char **path)
 {
 	int		i;
 	int		strlen;
@@ -116,11 +114,11 @@ static void	try_paths(t_args *args)
 	if (access(args->exec->cmd[0], F_OK) == 0)
 		execve(args->exec->cmd[0], args->exec->cmd, args->env);
 	i = 0;
-	while (args->path[i])
+	while (path[i])
 	{
-		strlen = ft_strlen(args->path[i]) + ft_strlen(args->exec->cmd[0]) + 1;
+		strlen = ft_strlen(path[i]) + ft_strlen(args->exec->cmd[0]) + 1;
 		copy = ft_calloc(strlen, sizeof(char));
-		ft_strlcat(copy, args->path[i], strlen);
+		ft_strlcat(copy, path[i], strlen);
 		ft_strlcat(copy, args->exec->cmd[0], strlen);
 		if (access(copy, F_OK) == 0)
 			execve(copy, args->exec->cmd, args->env);
