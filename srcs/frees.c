@@ -23,9 +23,9 @@ void	free_args(t_args *args)
 	if (args != NULL)
 	{
 		if (args->path != NULL)
-			ft_free_str_arr(args->path);
+			ft_free_str_arr(&args->path);
 		if (args->env != NULL)
-			ft_free_str_arr(args->env);
+			ft_free_str_arr(&args->env);
 	}
 }
 
@@ -53,7 +53,7 @@ void	free_exec(t_exec *exec)
 	{
 		exec = exec->next;
 		if (temp->cmd)
-			ft_free_str_arr(temp->cmd);
+			ft_free_str_arr(&temp->cmd);
 		free(temp);
 		temp = exec;
 	}

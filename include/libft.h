@@ -6,7 +6,7 @@
 /*   By: gcoqueir <gcoqueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/01 11:12:03 by bedos-sa          #+#    #+#             */
-/*   Updated: 2023/09/20 07:22:46 by gcoqueir         ###   ########.fr       */
+/*   Updated: 2023/10/05 16:43:38 by gcoqueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ void	ft_lstiter(t_list *lst, void (*f)(void *));
 t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
 
 // My functions
-void	ft_free_str_arr(char **arr);
+void	ft_free_str_arr(char ***arr);
 int		ft_list_len(t_list *lst);
 void	ft_swap_lst(t_list *lst);
 

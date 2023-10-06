@@ -20,7 +20,7 @@ void	export_builtin(t_data *data)
 		if (arr[1])
 			if (!find_in_env(data, arr[1]))
 				ft_lstadd_back(&data->env, ft_lstnew(ft_strdup(arr[1])));
-		ft_free_str_arr(arr);
+		ft_free_str_arr(&arr);
 	}
 }
 
@@ -42,14 +42,14 @@ int	find_in_env(t_data *data, char	*prompt)
 				free(temp->content);
 				temp->content = ft_strdup(prompt);
 			}
-			ft_free_str_arr(env);
-			ft_free_str_arr(arr);
+			ft_free_str_arr(&env);
+			ft_free_str_arr(&arr);
 			return (1);
 		}
-		ft_free_str_arr(env);
+		ft_free_str_arr(&env);
 		temp = temp->next;
 	}
-	ft_free_str_arr(arr);
+	ft_free_str_arr(&arr);
 	return (0);
 }
 
@@ -92,7 +92,7 @@ void	print_export(t_list *export)
 			printf("declare -x %s=\"%s\"\n", arr[0], arr[1]);
 		else
 			printf("declare -x %s=\"\"\n", arr[0]);
-		ft_free_str_arr(arr);
+		ft_free_str_arr(&arr);
 		export = export->next;
 	}
 }

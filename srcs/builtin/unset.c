@@ -12,7 +12,7 @@ void	unset_builtin(t_data *data)
 	arr = ft_split(data->prompt, ' ');
 	while (arr[++i] != NULL)
 		search_unset(data, arr[i]);
-	ft_free_str_arr(arr);
+	ft_free_str_arr(&arr);
 }
 
 void	search_unset(t_data *data, char *arr)
