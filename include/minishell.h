@@ -51,11 +51,8 @@ typedef struct t_args
 {
 	int		i;
 	int		cmd_count;
-	int		last_pi;
 	int		pipis[2];
 	int		pipes[2];
-	char	**path;
-	char	**env;
 	t_exec	*exec;
 }			t_args;
 
@@ -81,16 +78,17 @@ void	get_cmd_and_args(t_data *data, int len, int i, t_list *token);
 
 /* Free */
 void	free_cmd_not_found(char **path, char **env, t_data *data, pid_t *pids);
+void	free_builtin(t_data *data, pid_t *pids);
 void	free_for_all(t_data *data);
 void	free_list(t_list *list);
 void	free_exec(t_exec *exec);
 
 /* Builtin */
 void	exit_builtin(t_data *data);
-void	env_builtin(t_data *data);
+void	env_builtin(t_data *data, char **args);
 void	pwd_builtin(void);
 void	unset_builtin(t_data *data);
-void	export_builtin(t_data *data);
+void	export_builtin(t_data *data, char **args);
 
 /* Builtin Utils */
 t_list	*copy_env_list(t_list *env, t_list *lst);
@@ -115,6 +113,7 @@ char	*search_and_remove_quotes(char *str);
 
 /* Exec */
 void	execute(t_data *data, t_exec *exec);
+void	execute_builtin(t_data *data, t_exec *exec);
 void	child_process(t_data *data, pid_t *pids);
 void	first_command(t_args *args);
 void	middle_command(t_args *args);

@@ -1,9 +1,11 @@
 #include "minishell.h"
 
-void	env_builtin(t_data *data)
+void	env_builtin(t_data *data, char **args)
 {
 	t_list	*temp;
 
+	if (ft_arrsize(args) > 1)
+		return ;
 	temp = data->env;
 	while (temp != NULL)
 	{

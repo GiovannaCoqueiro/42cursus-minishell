@@ -9,6 +9,13 @@ void	free_cmd_not_found(char **path, char **env, t_data *data, pid_t *pids)
 	free_for_all(data);
 }
 
+void	free_builtin(t_data *data, pid_t *pids)
+{
+	free(pids);
+	free_exec(data->exec);
+	free_for_all(data);
+}
+
 void	free_for_all(t_data	*data)
 {
 	rl_clear_history();
