@@ -2,15 +2,15 @@
 
 static char	*remove_quote(char *str, int index);
 
-int	check_for_quotes(t_list *token)
+int	check_for_quotes(t_data *data)
 {
 	t_list	*temp;
 	char	*str;
 	int		i;
 	int		quoted;
 
-	temp = ft_lstlast(token);
-	str = ft_strdup((char *)token->content);
+	temp = ft_lstlast(data->token);
+	str = ft_strdup((char *)data->token->content);
 	i = -1;
 	quoted = 0;
 	while (str[++i] != '\0')
@@ -18,7 +18,8 @@ int	check_for_quotes(t_list *token)
 	free(str);
 	if (quoted != 0)
 	{
-		ft_putendl_fd("Non-closed quotes", 2);
+		ft_putendl_fd("prompt: non-closed quotes", 2);
+		data->exit_status = 2;
 		return (0);
 	}
 	return (1);

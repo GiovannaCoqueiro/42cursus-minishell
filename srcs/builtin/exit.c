@@ -1,24 +1,23 @@
 #include "minishell.h"
 
-void	exit_builtin(t_data *data)
+void	exit_builtin(t_data *data, pid_t *pids, char **args)
 {
-	t_exec *temp;
+	t_exec	*temp;
 	int		num;
 
 	temp = data->exec;
 	num = 0;
-	if (!data->exit_status)
+	if (data->exit_status != 0)
 		num = data->exit_status;
-	if (temp->cmd[1])
-		num = atoi(temp->cmd[1]);
-	free_for_all(data);
+	if (ft_arrsize(args) > 2)
+	{
+		printf("exit: too many arguments\n");
+		data->exit_status = 1;
+		return ;
+	}
+	if (ft_arrsize(args) == 2)
+		if (args[1])
+			num = atoi(args[1]);
+	free_builtin(data, pids);
 	exit(num);
 }
-
-// exit tambem precisa lidar com argumentos
-// exit sempre retorna um numero de 0 até a 255
-// exit recebe numeros dentro do int max
-// se ultrapassar o int max, retornamos 0
-
-// caso o comando anterior deu errado, e a pessoa usou 'exit' sem numeros, nós retornamos 127
-// caso o comando anterior deu certo, e a pessoa usou 'exit' sem numeros, nós retornamos 0

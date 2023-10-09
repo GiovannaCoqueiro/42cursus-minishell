@@ -1,8 +1,9 @@
 #include "minishell.h"
 
-static void	sort_env(t_list *export);
-static void	print_export(t_list *export);
-static int	find_in_env(t_data *data, char	*prompt);
+static void		sort_env(t_list *export);
+static t_list	*copy_env_list(t_list *env, t_list *lst);
+static void		print_export(t_list *export);
+static int		find_in_env(t_data *data, char	*prompt);
 
 void	export_builtin(t_data *data, char **args)
 {
@@ -22,6 +23,17 @@ void	export_builtin(t_data *data, char **args)
 				if (!find_in_env(data, args[i]))
 					ft_lstadd_back(&data->env, ft_lstnew(ft_strdup(args[i])));
 	}
+	data->exit_status = 0;
+}
+
+static t_list	*copy_env_list(t_list *env, t_list *lst)
+{
+	while (env != NULL)
+	{
+		ft_lstadd_back(&lst, ft_lstnew(ft_strdup(env->content)));
+		env = env->next;
+	}
+	return (lst);
 }
 
 int	find_in_env(t_data *data, char *var)

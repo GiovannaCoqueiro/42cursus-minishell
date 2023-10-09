@@ -31,9 +31,9 @@ void	init_readline(t_data *data)
 		if (ft_strlen(data->prompt) >= 1)
 		{
 			add_history(data->prompt);
-			if (tokenization(data) == 1 && check_for_quotes(data->token) == 1)
+			if (tokenization(data) == 1 && check_for_quotes(data) == 1)
 			{
-				check_var(data->token, data->env, data);
+				check_var(data);
 				read_prompt(data->token, data->lexer, data);
 			}
 			if (data->lexer != NULL)

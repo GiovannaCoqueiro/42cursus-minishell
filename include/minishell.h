@@ -84,14 +84,13 @@ void	free_list(t_list *list);
 void	free_exec(t_exec *exec);
 
 /* Builtin */
-void	exit_builtin(t_data *data);
+void	exit_builtin(t_data *data, pid_t *pids, char **args);
 void	env_builtin(t_data *data, char **args);
-void	pwd_builtin(void);
-void	unset_builtin(t_data *data);
+void	pwd_builtin(t_data *data);
+void	unset_builtin(t_data *data, char **args);
 void	export_builtin(t_data *data, char **args);
-
-/* Builtin Utils */
-t_list	*copy_env_list(t_list *env, t_list *lst);
+void	echo_builtin(t_data *data, char **args);
+void	cd_builtin(t_data *data, char **args);
 
 /* Signal */
 void	signal_handler(int signal);
@@ -105,15 +104,16 @@ int		syntax_analysis(int *lexer, int len);
 int		is_quoted(char c, int identifier);
 
 /* Fix input */
-int		check_for_quotes(t_list *token);
-void	check_var(t_list *token, t_list *env, t_data *data);
-char	*search_and_expand_var(char *str, t_list *env);
+int		check_for_quotes(t_data *data);
+void	check_var(t_data *data);
+char	*expand_exit_status(char *str, int index, int exit_status);
+char	*search_and_expand_var(char *str, t_data *data);
 void	check_tildes(t_list *token, char *home);
 char	*search_and_remove_quotes(char *str);
 
 /* Exec */
 void	execute(t_data *data, t_exec *exec);
-void	execute_builtin(t_data *data, t_exec *exec);
+void	execute_builtin(t_data *data, t_exec *exec, pid_t *pids);
 void	child_process(t_data *data, pid_t *pids);
 void	first_command(t_args *args);
 void	middle_command(t_args *args);

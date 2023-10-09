@@ -5,7 +5,7 @@ static char	*get_key(char *str, int start, int end);
 static char	*change_to_value(int index, char *str, char *value);
 static char	*complete_newstr(char *str, char *temp, size_t start, size_t end);
 
-char	*search_and_expand_var(char *str, t_list *env)
+char	*search_and_expand_var(char *str, t_data *data)
 {
 	int	quoted;
 	int	i;
@@ -17,10 +17,15 @@ char	*search_and_expand_var(char *str, t_list *env)
 		quoted = is_quoted(str[i], quoted);
 		if (quoted == 0 && (str[i] == '$' && str[i + 1] != '\0'
 				&& str[i + 1] != ' ' && str[i + 1] != '$'))
-			str = expand_var(str, i, env);
+		{
+			if (str[i + 1] == '?')
+				str = expand_exit_status(str, i, data->exit_status);
+			else
+				str = expand_var(str, i, data->env);
+		}
 		else if (quoted == 2 && (str[i] == '$' && str[i + 1] != '\0'
 				&& ft_strchr(VAR_STOPER, str[i + 1]) == NULL))
-			str = expand_var(str, i, env);
+			str = expand_var(str, i, data->env);
 		if (str[0] == '\0')
 			break ;
 	}

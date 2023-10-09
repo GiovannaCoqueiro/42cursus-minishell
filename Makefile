@@ -6,7 +6,7 @@
 #    By: gcoqueir <gcoqueir@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/12 10:33:46 by bedos-sa          #+#    #+#              #
-#    Updated: 2023/10/09 08:07:04 by gcoqueir         ###   ########.fr        #
+#    Updated: 2023/10/09 19:44:04 by gcoqueir         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,11 +23,11 @@ LIBFT = ./libft
 LIBS = ./include
 OBJ_DIR = build/
 INIT_DIR = init_utils/
+FIX_INPUT_DIR = fix_input/
 BUILT_DIR = builtin/
 SIG_DIR = signal/
 TOKEN_DIR = token/
 EXEC_DIR = exec/
-VAR_AND_QUOTES_DIR = var_and_quotes/
 
 RM = rm -f
 FILES = main.c \
@@ -39,14 +39,17 @@ FILES = main.c \
 		$(BUILT_DIR)pwd.c \
 		$(BUILT_DIR)unset.c \
 		$(BUILT_DIR)export.c \
+		$(BUILT_DIR)echo.c \
+		$(BUILT_DIR)cd.c \
 		$(SIG_DIR)signal.c \
 		$(TOKEN_DIR)token.c \
 		$(TOKEN_DIR)lexer.c \
 		$(TOKEN_DIR)syntax.c \
-		$(VAR_AND_QUOTES_DIR)var_and_quotes.c \
-		$(VAR_AND_QUOTES_DIR)expansion.c \
-		$(VAR_AND_QUOTES_DIR)check_quotes.c \
-		$(VAR_AND_QUOTES_DIR)check_tildes.c \
+		$(FIX_INPUT_DIR)fix_input.c \
+		$(FIX_INPUT_DIR)expansion.c \
+		$(FIX_INPUT_DIR)check_quotes.c \
+		$(FIX_INPUT_DIR)check_tildes.c \
+		$(FIX_INPUT_DIR)check_exit_status.c \
 		$(EXEC_DIR)exec.c \
 		$(EXEC_DIR)child_process.c \
 		$(EXEC_DIR)child_dups.c \
@@ -67,7 +70,7 @@ mkdir_obj:
 	@mkdir -p $(OBJ_DIR)$(SIG_DIR)
 	@mkdir -p $(OBJ_DIR)$(TOKEN_DIR)
 	@mkdir -p $(OBJ_DIR)$(EXEC_DIR)
-	@mkdir -p $(OBJ_DIR)$(VAR_AND_QUOTES_DIR)
+	@mkdir -p $(OBJ_DIR)$(FIX_INPUT_DIR)
 
 $(NAME): $(addprefix $(OBJ_DIR), $(OBJS))
 	@make -C $(LIBFT) --silent

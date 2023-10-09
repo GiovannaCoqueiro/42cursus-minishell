@@ -1,7 +1,3 @@
--- exec
-    - abrir todos os filhos em looping de uma vez e fazer o processo pai esperar por eles acabarem
-    - arrumar leaks quando não encontramos o comando
-
 -- signals
 
 -- redirects

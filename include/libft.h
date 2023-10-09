@@ -6,7 +6,7 @@
 /*   By: gcoqueir <gcoqueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/01 11:12:03 by bedos-sa          #+#    #+#             */
-/*   Updated: 2023/10/05 16:43:38 by gcoqueir         ###   ########.fr       */
+/*   Updated: 2023/10/09 20:03:51 by gcoqueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,10 +61,10 @@ char	**ft_split(char const *s, char c);
 char	*ft_itoa(int n);
 char	*ft_strmapi(char const *s, char (*f)(unsigned int, char));
 void	ft_striteri(char *s, void (*f)(unsigned int, char *));
-void	ft_putchar_fd(char c, int fd);
+int		ft_putchar_fd(char c, int fd);
+int		ft_putstr_fd(char *s, int fd);
 void	ft_putendl_fd(char *s, int fd);
 void	ft_putnbr_fd(int n, int fd);
-void	ft_putstr_fd(char *s, int fd);
 
 // Bonus functions
 t_list	*ft_lstnew(void *content);
@@ -109,5 +109,8 @@ int		ft_putint(int num);
 int		ft_unsign(unsigned int nb);
 int		ft_puthexlow(const char *str, int i, unsigned int num);
 int		ft_puthexupper(const char *str, int i, unsigned int num);
+
+//ft_printf_fd
+int		ft_printf_fd(int fd, const char *str, ...);
 
 #endif

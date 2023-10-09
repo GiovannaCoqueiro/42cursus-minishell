@@ -20,7 +20,10 @@ int	lex_analysis(t_data *data)
 		i++;
 	}
 	if (syntax_analysis(data->lexer, ft_lstsize(data->token)) == 0)
+	{
+		data->exit_status = 2;
 		return (0);
+	}
 	return (1);
 }
 
