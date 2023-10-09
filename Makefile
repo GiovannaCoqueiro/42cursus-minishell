@@ -6,7 +6,7 @@
 #    By: gcoqueir <gcoqueir@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/12 10:33:46 by bedos-sa          #+#    #+#              #
-#    Updated: 2023/10/09 07:23:14 by gcoqueir         ###   ########.fr        #
+#    Updated: 2023/10/09 08:07:04 by gcoqueir         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,6 +33,7 @@ RM = rm -f
 FILES = main.c \
 		frees.c \
 		$(INIT_DIR)init_utils.c \
+		$(INIT_DIR)get_cmd_and_builtin.c \
 		$(BUILT_DIR)exit.c \
 		$(BUILT_DIR)env.c \
 		$(BUILT_DIR)pwd.c \

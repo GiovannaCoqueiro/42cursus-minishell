@@ -43,6 +43,7 @@ enum	e_lexeme
 typedef struct s_exec
 {
 	char			**cmd;
+	int				lex;
 	struct s_exec	*next;
 }			t_exec;
 
@@ -76,6 +77,7 @@ typedef struct s_data
 void	copy_env(t_list **list, char **env, t_data *data);
 void	init_readline(t_data *data);
 void	read_prompt(t_list *token, int *lexer, t_data *data);
+void	get_cmd_and_args(t_data *data, int len, int i, t_list *token);
 
 /* Free */
 void	free_cmd_not_found(char **path, char **env, t_data *data, pid_t *pids);
