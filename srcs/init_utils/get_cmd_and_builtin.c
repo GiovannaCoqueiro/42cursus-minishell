@@ -2,6 +2,7 @@
 
 static int		is_redirect(int lex);
 static t_exec	*create_cmd_arr(int *lex, t_list *token, int len);
+static char		*copy_str(t_list *token);
 static void		exec_addback(t_exec **exec, t_exec *node);
 
 void	get_cmd_and_args(t_data *data, int len, int i, t_list *token)
@@ -53,11 +54,7 @@ static t_exec	*create_cmd_arr(int *lex, t_list *token, int len)
 	while (j < len)
 	{
 		if (is_redirect(lex[i]) == 0)
-		{
-			exec->cmd[j] = ft_calloc(sizeof(char), ft_strlen(token->content) + 1);
-			ft_strlcpy(exec->cmd[j], token->content, ft_strlen(token->content) + 1);
-			j++;
-		}
+			exec->cmd[j++] = copy_str(token);
 		else
 		{
 			i++;
@@ -68,6 +65,15 @@ static t_exec	*create_cmd_arr(int *lex, t_list *token, int len)
 	}
 	exec->cmd[j] = NULL;
 	return (exec);
+}
+
+static char	*copy_str(t_list *token)
+{
+	char	*cmd;
+
+	cmd = ft_calloc(sizeof(char), ft_strlen(token->content) + 1);
+	ft_strlcpy(cmd, token->content, ft_strlen(token->content) + 1);
+	return (cmd);
 }
 
 void	exec_addback(t_exec **exec, t_exec *node)
