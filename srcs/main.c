@@ -16,9 +16,3 @@ int	main(int argc, char **argv, char **envp)
 	}
 	return (0);
 }
-
-// export sem argumento lista as variaveis em ordem
-// alfabetica e lista tembem as que nao tem conteudo
-
-// exec exige um ponteiro de ponteiro para receber env,
-// ou seja, transformar em array a lista linkada

@@ -78,6 +78,7 @@ void	init_readline(t_data *data);
 void	read_prompt(t_list *token, int *lexer, t_data *data);
 
 /* Free */
+void	free_cmd_not_found(char **path, char **env, t_data *data, pid_t *pids);
 void	free_for_all(t_data *data);
 void	free_list(t_list *list);
 void	free_exec(t_exec *exec);
@@ -110,8 +111,9 @@ char	*search_and_expand_var(char *str, t_list *env);
 void	check_tildes(t_list *token, char *home);
 char	*search_and_remove_quotes(char *str);
 
-/* Pipex */
+/* Exec */
 void	execute(t_data *data, t_exec *exec);
+void	child_process(t_data *data, pid_t *pids);
 void	first_command(t_args *args);
 void	middle_command(t_args *args);
 void	last_command(t_args *args);

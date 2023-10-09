@@ -6,7 +6,7 @@
 #    By: gcoqueir <gcoqueir@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/12 10:33:46 by bedos-sa          #+#    #+#              #
-#    Updated: 2023/10/04 18:04:45 by gcoqueir         ###   ########.fr        #
+#    Updated: 2023/10/09 07:23:14 by gcoqueir         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,7 +27,7 @@ BUILT_DIR = builtin/
 SIG_DIR = signal/
 TOKEN_DIR = token/
 EXEC_DIR = exec/
-FIX_INPUT_DIR = fix_input/
+VAR_AND_QUOTES_DIR = var_and_quotes/
 
 RM = rm -f
 FILES = main.c \
@@ -42,11 +42,12 @@ FILES = main.c \
 		$(TOKEN_DIR)token.c \
 		$(TOKEN_DIR)lexer.c \
 		$(TOKEN_DIR)syntax.c \
-		$(FIX_INPUT_DIR)fix_input.c \
-		$(FIX_INPUT_DIR)expansion.c \
-		$(FIX_INPUT_DIR)check_quotes.c \
-		$(FIX_INPUT_DIR)check_tildes.c \
+		$(VAR_AND_QUOTES_DIR)var_and_quotes.c \
+		$(VAR_AND_QUOTES_DIR)expansion.c \
+		$(VAR_AND_QUOTES_DIR)check_quotes.c \
+		$(VAR_AND_QUOTES_DIR)check_tildes.c \
 		$(EXEC_DIR)exec.c \
+		$(EXEC_DIR)child_process.c \
 		$(EXEC_DIR)child_dups.c \
 		$(EXEC_DIR)pipes.c \
 		$(EXEC_DIR)here_doc.c
@@ -65,7 +66,7 @@ mkdir_obj:
 	@mkdir -p $(OBJ_DIR)$(SIG_DIR)
 	@mkdir -p $(OBJ_DIR)$(TOKEN_DIR)
 	@mkdir -p $(OBJ_DIR)$(EXEC_DIR)
-	@mkdir -p $(OBJ_DIR)$(FIX_INPUT_DIR)
+	@mkdir -p $(OBJ_DIR)$(VAR_AND_QUOTES_DIR)
 
 $(NAME): $(addprefix $(OBJ_DIR), $(OBJS))
 	@make -C $(LIBFT) --silent

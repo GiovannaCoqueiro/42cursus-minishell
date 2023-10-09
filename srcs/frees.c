@@ -1,5 +1,14 @@
 #include "minishell.h"
 
+void	free_cmd_not_found(char **path, char **env, t_data *data, pid_t *pids)
+{
+	free(pids);
+	ft_free_str_arr(&path);
+	ft_free_str_arr(&env);
+	free_exec(data->exec);
+	free_for_all(data);
+}
+
 void	free_for_all(t_data	*data)
 {
 	rl_clear_history();
