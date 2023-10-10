@@ -24,13 +24,12 @@ void	child_process(t_data *data, pid_t *pids)
 		env = turn_env_to_arr(data->env);
 		path = find_path(env);
 		try_paths(data->args, path, env);
-		ft_printf_fd(2, "%s: command not found\n", data->args->exec->cmd[0]);
 		free_cmd_not_found(path, env, data, pids);
 		exit(127);
 	}
 	execute_builtin(data, data->args->exec, pids);
 	free_builtin(data, pids);
-	exit(0);
+	exit(data->exit_status);
 }
 
 static char	**turn_env_to_arr(t_list *env)

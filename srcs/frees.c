@@ -2,6 +2,7 @@
 
 void	free_cmd_not_found(char **path, char **env, t_data *data, pid_t *pids)
 {
+	ft_printf_fd(2, "%s: command not found\n", data->args->exec->cmd[0]);
 	free(pids);
 	ft_free_str_arr(&path);
 	ft_free_str_arr(&env);

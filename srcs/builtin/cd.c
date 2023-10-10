@@ -16,8 +16,13 @@ void	cd_builtin(t_data *data, char **args)
 		chdir(data->home);
 	else if (len == 2)
 	{
-		if (stat(args[1], &file_info) == 0)
-			chdir(args[1]);
+		if (stat(args[1], &file_info) != 0)
+		{
+			ft_printf_fd(2, "cd: %s: no such file or directory\n", args[1]);
+			data->exit_status = 1;
+			return ;
+		}
+		chdir(args[1]);
 	}
 	data->exit_status = 0;
 }

@@ -6,7 +6,7 @@ void	env_builtin(t_data *data, char **args)
 
 	if (ft_arrsize(args) > 1)
 	{
-		ft_putendl_fd("env: too many arguments", 2);
+		ft_printf_fd(2, "env: %s: No such file or directory\n", args[1]);
 		data->exit_status = 127;
 		return ;
 	}
