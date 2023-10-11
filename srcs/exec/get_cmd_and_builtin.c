@@ -5,26 +5,36 @@ static t_exec	*create_cmd_arr(int *lex, t_list *token, int len);
 static char		*copy_str(t_list *token);
 static void		exec_addback(t_exec **exec, t_exec *node);
 
-void	get_cmd_and_args(t_data *data, int len, int i, t_list *token)
+void	get_cmd_and_args(t_list *token, int *lexer, t_data *data)
 {
-	int	temp;
-	int	start;
+	t_list	*temp;
+	int		i;
+	int		start;
+	int		len;
 
-	data->cmd_count++;
-	start = i;
-	temp = i;
-	i++;
-	while (i < len && data->lexer[i] != PIPE)
+	temp = token;
+	i = 0;
+	start = 0;
+	while (temp != NULL && lexer[i] != PIPE)
 	{
-		if (is_redirect(data->lexer[i]) == 1)
+		if (lexer[i] == CMD)
 		{
-			i++;
-			temp += 2;
+			start = i;
+			data->has_cmd = 1;
 		}
+		temp = temp->next;
 		i++;
 	}
-	len = i - temp;
+	len = i - start;
 	exec_addback(&data->exec, create_cmd_arr(&data->lexer[start], token, len));
+	t_exec *exec = data->exec;
+	while (exec != NULL)
+	{
+		i = 0;
+		while (exec->cmd[i] != NULL)
+			printf("%s\n", exec->cmd[i++]);
+		exec = exec->next;
+	}
 }
 
 static int	is_redirect(int lex)

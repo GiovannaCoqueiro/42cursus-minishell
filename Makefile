@@ -6,7 +6,7 @@
 #    By: gcoqueir <gcoqueir@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/12 10:33:46 by bedos-sa          #+#    #+#              #
-#    Updated: 2023/10/09 19:44:04 by gcoqueir         ###   ########.fr        #
+#    Updated: 2023/10/11 19:30:32 by gcoqueir         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,7 +33,6 @@ RM = rm -f
 FILES = main.c \
 		frees.c \
 		$(INIT_DIR)init_utils.c \
-		$(INIT_DIR)get_cmd_and_builtin.c \
 		$(BUILT_DIR)exit.c \
 		$(BUILT_DIR)env.c \
 		$(BUILT_DIR)pwd.c \
@@ -54,6 +53,8 @@ FILES = main.c \
 		$(EXEC_DIR)child_process.c \
 		$(EXEC_DIR)child_dups.c \
 		$(EXEC_DIR)pipes.c \
+		$(EXEC_DIR)validate_files.c \
+		$(EXEC_DIR)get_cmd_and_builtin.c \
 		$(EXEC_DIR)here_doc.c
 		
 OBJS = $(FILES:.c=.o)
@@ -81,7 +82,7 @@ run: all
 	./$(NAME)
 
 val: all
-	valgrind --suppressions=./local.supp --leak-check=full --show-leak-kinds=all ./$(NAME)
+	valgrind --suppressions=./local.supp --quiet --leak-check=full --show-leak-kinds=all ./$(NAME)
 
 bonus: all
 

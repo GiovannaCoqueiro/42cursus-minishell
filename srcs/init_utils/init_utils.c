@@ -49,29 +49,15 @@ void	read_prompt(t_list *token, int *lexer, t_data *data)
 {
 	int		i;
 	int		list_len;
-	t_exec	exec;
 
 	list_len = ft_lstsize(token);
-	i = 0;
-	exec.cmd = NULL;
-	data->exec = &exec;
-	data->cmd_count = 0;
+	i = -1;
+	data->process_count = 1;
 	while (token != NULL)
 	{
-		if (lexer[i] == CMD || lexer[i] == BUILTIN)
-			get_cmd_and_args(data, list_len, i, token);
+		if (lexer[++i] == PIPE)
+			data->process_count++;
 		token = token->next;
-		i++;
 	}
-	// t_exec *test = data->exec;
-	// while (test != NULL)
-	// {
-	// 	int j = -1;
-	// 	while (test->cmd[++j] != NULL)
-	// 		printf("%s\n", test->cmd[j]);
-	// 	printf("lex: %d\n", test->lex);
-	// 	test = test->next;
-	// }
-	execute(data, data->exec);
-	free_exec(data->exec);
+	execute(data);
 }

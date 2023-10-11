@@ -1,38 +1,52 @@
 #include "minishell.h"
 
-static char	**turn_env_to_arr(t_list *env);
-static char	**find_path(char **env);
-static void	try_paths(t_args *args, char **path, char **env);
+ char	**turn_env_to_arr(t_list *env);
+ char	**find_path(char **env);
+ void	try_paths(t_args *args, char **path, char **env);
 
-void	child_process(t_data *data, pid_t *pids)
+void	child_process(t_data *data, t_list *token, int *lexer, pid_t *pids)
 {
 	char	**path;
 	char	**env;
+	t_exec	exec;
+	int		fd[2];
 
-	if (data->args->cmd_count > 1)
+	(void)pids;
+	if (validate_files(token, lexer, &fd[0], &fd[1]) == 1)
 	{
-		if (data->args->i == data->args->cmd_count - 1)
-			last_command(data->args);
-		else if (data->args->i == 0)
-			first_command(data->args);
-		else
-			middle_command(data->args);
+		printf("valido\n");
+		data->has_cmd = 0;
+		exec.cmd = NULL;
+		data->exec = &exec;
+		get_cmd_and_args(token, lexer, data);
+		if (data->process_count > 0)
+		{
+			if (data->args->index == data->process_count - 1)
+				last_command(data->args);
+			else if (data->args->index == 0)
+				first_command(data->args);
+			else
+				middle_command(data->args);
+		}
+		close_pipes(data->args);
+		if (data->exec->lex == CMD)
+		{
+			env = turn_env_to_arr(data->env);
+			path = find_path(env);
+			try_paths(data->args, path, env);
+			free_cmd_not_found(path, env, data, pids);
+			exit(127);
+		}
+		execute_builtin(data, data->args->exec, pids);
+		free_builtin(data, pids);
+		exit(data->exit_status);
+		exit (0);
 	}
-	close_pipes(data->args);
-	if (data->args->exec->lex == CMD)
-	{
-		env = turn_env_to_arr(data->env);
-		path = find_path(env);
-		try_paths(data->args, path, env);
-		free_cmd_not_found(path, env, data, pids);
-		exit(127);
-	}
-	execute_builtin(data, data->args->exec, pids);
-	free_builtin(data, pids);
-	exit(data->exit_status);
+	printf("não valido\n");
+	exit (1);
 }
 
-static char	**turn_env_to_arr(t_list *env)
+ char	**turn_env_to_arr(t_list *env)
 {
 	char	**arr;
 	int		i;
@@ -50,7 +64,7 @@ static char	**turn_env_to_arr(t_list *env)
 	return (arr);
 }
 
-static char	**find_path(char **env)
+ char	**find_path(char **env)
 {
 	int		i;
 	char	**temp;
@@ -74,7 +88,7 @@ static char	**find_path(char **env)
 	return (paths);
 }
 
-static void	try_paths(t_args *args, char **path, char **env)
+ void	try_paths(t_args *args, char **path, char **env)
 {
 	int		i;
 	int		strlen;

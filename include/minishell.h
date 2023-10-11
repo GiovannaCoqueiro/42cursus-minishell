@@ -44,13 +44,14 @@ typedef struct s_exec
 {
 	char			**cmd;
 	int				lex;
+	int				fd_in;
+	int				fd_out;
 	struct s_exec	*next;
 }			t_exec;
 
 typedef struct t_args
 {
-	int		i;
-	int		cmd_count;
+	int		index;
 	int		pipis[2];
 	int		pipes[2];
 	t_exec	*exec;
@@ -64,7 +65,8 @@ typedef struct s_data
 	t_list	*token;
 	int		*lexer;
 	t_exec	*exec;
-	int		cmd_count;
+	int		has_cmd;
+	int		process_count;
 	t_args	*args;
 	int		exit_status;
 
@@ -74,7 +76,7 @@ typedef struct s_data
 void	copy_env(t_list **list, char **env, t_data *data);
 void	init_readline(t_data *data);
 void	read_prompt(t_list *token, int *lexer, t_data *data);
-void	get_cmd_and_args(t_data *data, int len, int i, t_list *token);
+void	get_cmd_and_args(t_list *token, int *lexer, t_data *data);
 
 /* Free */
 void	free_cmd_not_found(char **path, char **env, t_data *data, pid_t *pids);
@@ -112,13 +114,14 @@ void	check_tildes(t_list *token, char *home);
 char	*search_and_remove_quotes(char *str);
 
 /* Exec */
-void	execute(t_data *data, t_exec *exec);
-void	execute_builtin(t_data *data, t_exec *exec, pid_t *pids);
-void	child_process(t_data *data, pid_t *pids);
+void	execute(t_data *data);
+int		validate_files(t_list *token, int *lexer, int *fd_in, int *fd_out);
+void	child_process(t_data *data, t_list *token, int *lexer, pid_t *pids);
 void	first_command(t_args *args);
 void	middle_command(t_args *args);
 void	last_command(t_args *args);
 void	close_pipes(t_args *args);
 void	recycle_pipe(t_args *args);
+void	execute_builtin(t_data *data, t_exec *exec, pid_t *pids);
 
 #endif

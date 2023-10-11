@@ -1,15 +1,14 @@
 #include "minishell.h"
 
 static void	commands_fork(t_args *args, t_data *data);
+static void	wait_all_processes(t_data *data, pid_t *pids);
 
-void	execute(t_data *data, t_exec *exec)
+void	execute(t_data *data)
 {
 	t_args	args;
 
-	args.cmd_count = data->cmd_count;
-	args.exec = exec;
 	data->args = &args;
-	args.i = 0;
+	args.index = 0;
 	pipe(args.pipis);
 	pipe(args.pipes);
 	commands_fork(&args, data);
@@ -21,30 +20,58 @@ static void	commands_fork(t_args *args, t_data *data)
 	pid_t	*pids;
 	int		i;
 
-	if (args->exec->lex == BUILTIN && args->cmd_count == 1)
-		execute_builtin(data, args->exec, NULL);
-	else
+	i = 0;
+	pids = ft_calloc(sizeof(int), data->process_count);
+	while (args->index < data->process_count)
 	{
-		pids = ft_calloc(sizeof(int), args->cmd_count);
-		while (args->i < args->cmd_count)
+		if (data->lexer[i] == PIPE)
 		{
-			pids[args->i] = fork();
-			if (pids[args->i] == 0)
-				child_process(data, pids);
-			if (args->cmd_count == 1)
-				wait(NULL);
-			recycle_pipe(args);
-			args->i++;
-			args->exec = args->exec->next;
+			i++;
+			data->token = data->token->next;
 		}
-		i = 0;
-		while (i < args->cmd_count)
+		pids[args->index] = fork();
+		if (pids[args->index] == 0)
+			child_process(data, data->token, &data->lexer[i], pids);
+		// if (data->process_count == 1)
+		// 	wait(NULL);
+		// recycle_pipe(args);
+		while (data->token != NULL && data->lexer[i] != PIPE)
 		{
-			waitpid(pids[i], NULL, 0);
+			data->token = data->token->next;
 			i++;
 		}
-		free(pids);
+		args->index++;
 	}
+	wait_all_processes(data, pids);
+	free(pids);
+	// if (args->exec->lex == BUILTIN && data->process_count == 1)
+	// 	execute_builtin(data, args->exec, NULL);
+	// else
+	// {
+	// 	pids = ft_calloc(sizeof(int), args->cmd_count);
+	// 	while (args->index < data->process_count)
+	// 	{
+	// 		pids[args->index] = fork();
+	// 		if (pids[args->index] == 0)
+	// 			child_process(data, pids);
+	// 		if (args->cmd_count == 1)
+	// 			wait(NULL);
+	// 		recycle_pipe(args);
+	// 		args->index++;
+	// 		args->exec = args->exec->next;
+	// 	}
+	// 	wait_all_processes(args, pids);
+	// 	free(pids);
+	// }
+}
+
+static void	wait_all_processes(t_data *data, pid_t *pids)
+{
+	int	i;
+
+	i = -1;
+	while (++i < data->process_count)
+		waitpid(pids[i], &data->exit_status, 0);
 }
 
 void	execute_builtin(t_data *data, t_exec *exec, pid_t *pids)

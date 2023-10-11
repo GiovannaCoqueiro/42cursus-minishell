@@ -5,5 +5,3 @@
     - se houver varios redirects de saida, criamos todos mas consideramos apenas o ultimo
 
 -- exit code
-
--- terminar builtins
