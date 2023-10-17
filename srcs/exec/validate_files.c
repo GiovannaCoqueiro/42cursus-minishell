@@ -8,8 +8,8 @@ int	validate_files(t_list *token, int *lexer, int *fd_in, int *fd_out)
 	t_list		*temp;
 	int			i;
 
-	*fd_in = -1;
-	*fd_out = -1;
+	*fd_in = -2;
+	*fd_out = -2;
 	i = -1;
 	temp = token;
 	while (temp != NULL && lexer[++i] != PIPE)
@@ -24,9 +24,9 @@ int	validate_files(t_list *token, int *lexer, int *fd_in, int *fd_out)
 				*fd_in = open_file(temp->next->content, 1, fd_in, fd_out);
 			else
 			{
-				if (*fd_in != -1)
+				if (*fd_in != -2)
 					close (*fd_in);
-				if (*fd_out != -1)
+				if (*fd_out != -2)
 					close (*fd_out);
 				ft_printf_fd(2, "No such file or directory\n");
 				return (0);
@@ -43,19 +43,19 @@ static int	open_file(char *file, int mode, int *fd_in, int *fd_out)
 
 	if (mode == 1)
 	{
-		if (*fd_in != -1)
+		if (*fd_in != -2)
 			close (*fd_in);
 		fd = open(file, O_RDONLY);
 	}
 	else if (mode == 2)
 	{
-		if (*fd_out != -1)
+		if (*fd_out != -2)
 			close (*fd_out);
 		fd = open(file, O_TRUNC | O_CREAT | O_WRONLY, 0777);
 	}
 	else
 	{
-		if (*fd_out != -1)
+		if (*fd_out != -2)
 			close (*fd_out);
 		fd = open(file, O_APPEND | O_CREAT | O_WRONLY, 0777);
 	}

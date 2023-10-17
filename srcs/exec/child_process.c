@@ -1,23 +1,20 @@
 #include "minishell.h"
 
- char	**turn_env_to_arr(t_list *env);
- char	**find_path(char **env);
- void	try_paths(t_args *args, char **path, char **env);
+static char	**turn_env_to_arr(t_list *env);
+static char	**find_path(char **env);
+static void	try_paths(t_exec *exec, char **path, char **env);
 
 void	child_process(t_data *data, t_list *token, int *lexer, pid_t *pids)
 {
 	char	**path;
 	char	**env;
-	t_exec	exec;
 	int		fd[2];
 
 	(void)pids;
 	if (validate_files(token, lexer, &fd[0], &fd[1]) == 1)
 	{
-		printf("valido\n");
 		data->has_cmd = 0;
-		exec.cmd = NULL;
-		data->exec = &exec;
+		data->has_builtin = 0;
 		get_cmd_and_args(token, lexer, data);
 		if (data->process_count > 0)
 		{
@@ -33,20 +30,19 @@ void	child_process(t_data *data, t_list *token, int *lexer, pid_t *pids)
 		{
 			env = turn_env_to_arr(data->env);
 			path = find_path(env);
-			try_paths(data->args, path, env);
+			try_paths(data->exec, path, env);
 			free_cmd_not_found(path, env, data, pids);
 			exit(127);
 		}
-		execute_builtin(data, data->args->exec, pids);
+		execute_builtin(data, data->exec, pids);
 		free_builtin(data, pids);
 		exit(data->exit_status);
 		exit (0);
 	}
-	printf("não valido\n");
 	exit (1);
 }
 
- char	**turn_env_to_arr(t_list *env)
+static char	**turn_env_to_arr(t_list *env)
 {
 	char	**arr;
 	int		i;
@@ -64,7 +60,7 @@ void	child_process(t_data *data, t_list *token, int *lexer, pid_t *pids)
 	return (arr);
 }
 
- char	**find_path(char **env)
+static char	**find_path(char **env)
 {
 	int		i;
 	char	**temp;
@@ -88,25 +84,25 @@ void	child_process(t_data *data, t_list *token, int *lexer, pid_t *pids)
 	return (paths);
 }
 
- void	try_paths(t_args *args, char **path, char **env)
+static void	try_paths(t_exec *exec, char **path, char **env)
 {
 	int		i;
 	int		strlen;
 	char	*copy;
 
-	if (access(args->exec->cmd[0], F_OK) == 0)
-		execve(args->exec->cmd[0], args->exec->cmd, env);
+	if (access(exec->cmd[0], F_OK) == 0)
+		execve(exec->cmd[0], exec->cmd, env);
 	i = 0;
 	if (path != NULL)
 	{
 		while (path[i])
 		{
-			strlen = ft_strlen(path[i]) + ft_strlen(args->exec->cmd[0]) + 1;
+			strlen = ft_strlen(path[i]) + ft_strlen(exec->cmd[0]) + 1;
 			copy = ft_calloc(strlen, sizeof(char));
 			ft_strlcat(copy, path[i], strlen);
-			ft_strlcat(copy, args->exec->cmd[0], strlen);
+			ft_strlcat(copy, exec->cmd[0], strlen);
 			if (access(copy, F_OK) == 0)
-				execve(copy, args->exec->cmd, env);
+				execve(copy, exec->cmd, env);
 			free(copy);
 			i++;
 		}

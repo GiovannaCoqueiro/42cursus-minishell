@@ -1,40 +1,35 @@
 #include "minishell.h"
 
 static int		is_redirect(int lex);
-static t_exec	*create_cmd_arr(int *lex, t_list *token, int len);
+static t_exec	*create_cmd_arr(int *lex, t_list *token, int len, int size);
 static char		*copy_str(t_list *token);
-static void		exec_addback(t_exec **exec, t_exec *node);
 
 void	get_cmd_and_args(t_list *token, int *lexer, t_data *data)
 {
 	t_list	*temp;
-	int		i;
-	int		start;
 	int		len;
+	int		redirect;
 
+	len = 0;
+	redirect = 0;
 	temp = token;
-	i = 0;
-	start = 0;
-	while (temp != NULL && lexer[i] != PIPE)
+	while (temp != NULL && lexer[len] != PIPE)
 	{
-		if (lexer[i] == CMD)
-		{
-			start = i;
+		if (lexer[len] == CMD)
 			data->has_cmd = 1;
+		else if (lexer[len] == BUILTIN)
+			data->has_builtin = 1;
+		else if (is_redirect(lexer[len]) == 1)
+		{
+			temp = temp->next;
+			len++;
+			redirect += 2;
 		}
 		temp = temp->next;
-		i++;
+		len++;
 	}
-	len = i - start;
-	exec_addback(&data->exec, create_cmd_arr(&data->lexer[start], token, len));
-	t_exec *exec = data->exec;
-	while (exec != NULL)
-	{
-		i = 0;
-		while (exec->cmd[i] != NULL)
-			printf("%s\n", exec->cmd[i++]);
-		exec = exec->next;
-	}
+	if (data->has_cmd == 1 || data->has_builtin == 1)
+		data->exec = create_cmd_arr(lexer, token, len, len - redirect);
 }
 
 static int	is_redirect(int lex)
@@ -50,18 +45,20 @@ static int	is_redirect(int lex)
 	return (0);
 }
 
-static t_exec	*create_cmd_arr(int *lex, t_list *token, int len)
+static t_exec	*create_cmd_arr(int *lex, t_list *token, int len, int size)
 {
-	t_exec	*exec;
 	int		i;
 	int		j;
+	t_exec	*exec;
 
 	exec = ft_calloc(sizeof(t_exec), 1);
 	exec->lex = lex[0];
-	exec->cmd = ft_calloc(sizeof(char *), len + 1);
+	exec->fd_in = -2;
+	exec->fd_out = -2;
+	exec->cmd = ft_calloc(sizeof(char *), size + 1);
 	i = 0;
 	j = 0;
-	while (j < len)
+	while (i < len)
 	{
 		if (is_redirect(lex[i]) == 0)
 			exec->cmd[j++] = copy_str(token);
@@ -84,19 +81,4 @@ static char	*copy_str(t_list *token)
 	cmd = ft_calloc(sizeof(char), ft_strlen(token->content) + 1);
 	ft_strlcpy(cmd, token->content, ft_strlen(token->content) + 1);
 	return (cmd);
-}
-
-void	exec_addback(t_exec **exec, t_exec *node)
-{
-	t_exec	*temp;
-
-	temp = *exec;
-	if (temp->cmd == NULL)
-		*exec = node;
-	else
-	{
-		while (temp->next != NULL)
-			temp = temp->next;
-		temp->next = node;
-	}
 }

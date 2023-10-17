@@ -19,50 +19,33 @@ static void	commands_fork(t_args *args, t_data *data)
 {
 	pid_t	*pids;
 	int		i;
+	t_list	*temp;
 
 	i = 0;
+	temp = data->token;
 	pids = ft_calloc(sizeof(int), data->process_count);
 	while (args->index < data->process_count)
 	{
 		if (data->lexer[i] == PIPE)
 		{
 			i++;
-			data->token = data->token->next;
+			temp = temp->next;
 		}
 		pids[args->index] = fork();
 		if (pids[args->index] == 0)
-			child_process(data, data->token, &data->lexer[i], pids);
-		// if (data->process_count == 1)
-		// 	wait(NULL);
-		// recycle_pipe(args);
-		while (data->token != NULL && data->lexer[i] != PIPE)
+			child_process(data, temp, &data->lexer[i], pids);
+		if (data->process_count == 1)
+			wait(NULL);
+		recycle_pipe(args);
+		while (temp != NULL && data->lexer[i] != PIPE)
 		{
-			data->token = data->token->next;
+			temp = temp->next;
 			i++;
 		}
 		args->index++;
 	}
 	wait_all_processes(data, pids);
 	free(pids);
-	// if (args->exec->lex == BUILTIN && data->process_count == 1)
-	// 	execute_builtin(data, args->exec, NULL);
-	// else
-	// {
-	// 	pids = ft_calloc(sizeof(int), args->cmd_count);
-	// 	while (args->index < data->process_count)
-	// 	{
-	// 		pids[args->index] = fork();
-	// 		if (pids[args->index] == 0)
-	// 			child_process(data, pids);
-	// 		if (args->cmd_count == 1)
-	// 			wait(NULL);
-	// 		recycle_pipe(args);
-	// 		args->index++;
-	// 		args->exec = args->exec->next;
-	// 	}
-	// 	wait_all_processes(args, pids);
-	// 	free(pids);
-	// }
 }
 
 static void	wait_all_processes(t_data *data, pid_t *pids)

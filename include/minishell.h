@@ -46,7 +46,6 @@ typedef struct s_exec
 	int				lex;
 	int				fd_in;
 	int				fd_out;
-	struct s_exec	*next;
 }			t_exec;
 
 typedef struct t_args
@@ -66,6 +65,7 @@ typedef struct s_data
 	int		*lexer;
 	t_exec	*exec;
 	int		has_cmd;
+	int		has_builtin;
 	int		process_count;
 	t_args	*args;
 	int		exit_status;
