@@ -3,3 +3,5 @@
 -- HEREDOC
 
 -- caçar leaks
+
+-- Arrumar o split do export
