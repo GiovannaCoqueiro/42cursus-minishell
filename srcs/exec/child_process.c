@@ -26,19 +26,27 @@ void	child_process(t_data *data, t_list *token, int *lexer, pid_t *pids)
 				middle_command(data->args);
 		}
 		close_pipes(data->args);
-		if (data->exec->lex == CMD)
+		if (fd[0] != -2 || fd[1] != -2)
+			redirect_files(fd[0], fd[1]);
+		if (data->has_builtin == 1 || data->has_cmd == 1)
 		{
-			env = turn_env_to_arr(data->env);
-			path = find_path(env);
-			try_paths(data->exec, path, env);
-			free_cmd_not_found(path, env, data, pids);
-			exit(127);
+			if (data->exec->lex == CMD)
+			{
+				env = turn_env_to_arr(data->env);
+				path = find_path(env);
+				try_paths(data->exec, path, env);
+				close_files(fd[0], fd[1]);
+				free_cmd_not_found(path, env, data, pids);
+				exit(127);
+			}
+			execute_builtin(data, data->exec, pids);
+			close_files(fd[0], fd[1]);
+			free_builtin(data, pids);
+			exit(data->exit_status);
 		}
-		execute_builtin(data, data->exec, pids);
-		free_builtin(data, pids);
-		exit(data->exit_status);
-		exit (0);
 	}
+	free(pids);
+	free_for_all(data);
 	exit (1);
 }
 

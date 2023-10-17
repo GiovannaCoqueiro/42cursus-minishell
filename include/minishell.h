@@ -53,7 +53,6 @@ typedef struct t_args
 	int		index;
 	int		pipis[2];
 	int		pipes[2];
-	t_exec	*exec;
 }			t_args;
 
 typedef struct s_data
@@ -76,23 +75,6 @@ typedef struct s_data
 void	copy_env(t_list **list, char **env, t_data *data);
 void	init_readline(t_data *data);
 void	read_prompt(t_list *token, int *lexer, t_data *data);
-void	get_cmd_and_args(t_list *token, int *lexer, t_data *data);
-
-/* Free */
-void	free_cmd_not_found(char **path, char **env, t_data *data, pid_t *pids);
-void	free_builtin(t_data *data, pid_t *pids);
-void	free_for_all(t_data *data);
-void	free_list(t_list *list);
-void	free_exec(t_exec *exec);
-
-/* Builtin */
-void	exit_builtin(t_data *data, pid_t *pids, char **args);
-void	env_builtin(t_data *data, char **args);
-void	pwd_builtin(t_data *data);
-void	unset_builtin(t_data *data, char **args);
-void	export_builtin(t_data *data, char **args);
-void	echo_builtin(t_data *data, char **args);
-void	cd_builtin(t_data *data, char **args);
 
 /* Signal */
 void	signal_handler(int signal);
@@ -115,13 +97,34 @@ char	*search_and_remove_quotes(char *str);
 
 /* Exec */
 void	execute(t_data *data);
-int		validate_files(t_list *token, int *lexer, int *fd_in, int *fd_out);
 void	child_process(t_data *data, t_list *token, int *lexer, pid_t *pids);
 void	first_command(t_args *args);
 void	middle_command(t_args *args);
 void	last_command(t_args *args);
+void	get_cmd_and_args(t_list *token, int *lexer, t_data *data);
 void	close_pipes(t_args *args);
 void	recycle_pipe(t_args *args);
 void	execute_builtin(t_data *data, t_exec *exec, pid_t *pids);
+
+/* Builtin */
+void	exit_builtin(t_data *data, pid_t *pids, char **args);
+void	env_builtin(t_data *data, char **args);
+void	pwd_builtin(t_data *data);
+void	unset_builtin(t_data *data, char **args);
+void	export_builtin(t_data *data, char **args);
+void	echo_builtin(t_data *data, char **args);
+void	cd_builtin(t_data *data, char **args);
+
+/* Redirect */
+int		validate_files(t_list *token, int *lexer, int *fd_in, int *fd_out);
+void	redirect_files(int fd_in, int fd_out);
+void	close_files(int fd_in, int fd_out);
+
+/* Free */
+void	free_cmd_not_found(char **path, char **env, t_data *data, pid_t *pids);
+void	free_builtin(t_data *data, pid_t *pids);
+void	free_for_all(t_data *data);
+void	free_list(t_list *list);
+void	free_exec(t_exec *exec);
 
 #endif

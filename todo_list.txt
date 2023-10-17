@@ -1,7 +1,5 @@
 -- signals
 
--- redirects
-    - se houver varios redirects de entrada, consideramos apenas o ultimo, mas se algum anterior der erro, retornamos erro
-    - se houver varios redirects de saida, criamos todos mas consideramos apenas o ultimo
+-- HEREDOC
 
--- exit code
+-- caçar leaks

@@ -6,7 +6,7 @@
 #    By: gcoqueir <gcoqueir@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/12 10:33:46 by bedos-sa          #+#    #+#              #
-#    Updated: 2023/10/11 19:30:32 by gcoqueir         ###   ########.fr        #
+#    Updated: 2023/10/17 07:58:32 by gcoqueir         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,6 +28,7 @@ BUILT_DIR = builtin/
 SIG_DIR = signal/
 TOKEN_DIR = token/
 EXEC_DIR = exec/
+REDIRECT_DIR = redirect/
 
 RM = rm -f
 FILES = main.c \
@@ -53,9 +54,9 @@ FILES = main.c \
 		$(EXEC_DIR)child_process.c \
 		$(EXEC_DIR)child_dups.c \
 		$(EXEC_DIR)pipes.c \
-		$(EXEC_DIR)validate_files.c \
 		$(EXEC_DIR)get_cmd_and_builtin.c \
-		$(EXEC_DIR)here_doc.c
+		$(EXEC_DIR)here_doc.c \
+		$(REDIRECT_DIR)files.c
 		
 OBJS = $(FILES:.c=.o)
 
@@ -71,6 +72,7 @@ mkdir_obj:
 	@mkdir -p $(OBJ_DIR)$(SIG_DIR)
 	@mkdir -p $(OBJ_DIR)$(TOKEN_DIR)
 	@mkdir -p $(OBJ_DIR)$(EXEC_DIR)
+	@mkdir -p $(OBJ_DIR)$(REDIRECT_DIR)
 	@mkdir -p $(OBJ_DIR)$(FIX_INPUT_DIR)
 
 $(NAME): $(addprefix $(OBJ_DIR), $(OBJS))
