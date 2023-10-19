@@ -9,14 +9,12 @@ void	child_process(t_data *data, t_list *token, int *lexer, pid_t *pids)
 	char	**path;
 	char	**env;
 	int		fd[2];
+	int		backup_exit_status;
 
-	(void)pids;
 	if (validate_files(token, lexer, &fd[0], &fd[1]) == 1)
 	{
-		data->has_cmd = 0;
-		data->has_builtin = 0;
 		get_cmd_and_args(token, lexer, data);
-		if (data->process_count > 0)
+		if (data->process_count > 1)
 		{
 			if (data->args->index == data->process_count - 1)
 				last_command(data->args);
@@ -41,8 +39,9 @@ void	child_process(t_data *data, t_list *token, int *lexer, pid_t *pids)
 			}
 			execute_builtin(data, data->exec, pids);
 			close_files(fd[0], fd[1]);
+			backup_exit_status = data->exit_status;
 			free_builtin(data, pids);
-			exit(data->exit_status);
+			exit(backup_exit_status);
 		}
 	}
 	free(pids);

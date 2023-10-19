@@ -1,6 +1,8 @@
 #include "minishell.h"
 
 static void	commands_fork(t_args *args, t_data *data);
+static void	execute_builtin_parent_process(t_data *data);
+static void	execute_child_process(t_data *data, t_args *args);
 static void	wait_all_processes(t_data *data, pid_t *pids, int flag);
 
 void	execute(t_data *data)
@@ -16,6 +18,31 @@ void	execute(t_data *data)
 }
 
 static void	commands_fork(t_args *args, t_data *data)
+{
+	data->has_cmd = 0;
+	data->has_builtin = 0;
+	if (data->process_count == 1 && data->builtin_check == 1)
+		execute_builtin_parent_process(data);
+	else
+		execute_child_process(data, args);
+}
+
+static void	execute_builtin_parent_process(t_data *data)
+{
+	int		fd[2];
+
+	if (validate_files(data->token, data->lexer, &fd[0], &fd[1]) == 1)
+	{
+		get_cmd_and_args(data->token, data->lexer, data);
+		if (fd[0] != -2 || fd[1] != -2)
+			redirect_files(fd[0], fd[1]);
+		execute_builtin(data, data->exec, NULL);
+		close_files(fd[0], fd[1]);
+		free_exec(data->exec);
+	}
+}
+
+static void	execute_child_process(t_data *data, t_args *args)
 {
 	pid_t	*pids;
 	int		i;
@@ -66,22 +93,4 @@ static void	wait_all_processes(t_data *data, pid_t *pids, int flag)
 		if (WEXITSTATUS(data->exit_status))
 			data->exit_status = WEXITSTATUS(data->exit_status);
 	}
-}
-
-void	execute_builtin(t_data *data, t_exec *exec, pid_t *pids)
-{
-	if (ft_strcmp(data->exec->cmd[0], "env") == 0)
-		env_builtin(data, exec->cmd);
-	else if (ft_strcmp(data->exec->cmd[0], "pwd") == 0)
-		pwd_builtin(data);
-	else if (ft_strcmp(data->exec->cmd[0], "export") == 0)
-		export_builtin(data, exec->cmd);
-	else if (ft_strcmp(data->exec->cmd[0], "unset") == 0)
-		unset_builtin(data, exec->cmd);
-	else if (ft_strcmp(data->exec->cmd[0], "exit") == 0)
-		exit_builtin(data, pids, exec->cmd);
-	else if (ft_strcmp(data->exec->cmd[0], "echo") == 0)
-		echo_builtin(data, exec->cmd);
-	else if (ft_strcmp(data->exec->cmd[0], "cd") == 0)
-		cd_builtin(data, exec->cmd);
 }

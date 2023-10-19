@@ -61,7 +61,11 @@ static t_exec	*create_cmd_arr(int *lex, t_list *token, int len, int size)
 	while (i < len)
 	{
 		if (is_redirect(lex[i]) == 0)
+		{
+			if (lex[i] == CMD || lex[i] == BUILTIN)
+				exec->lex = lex[i];
 			exec->cmd[j++] = copy_str(token);
+		}
 		else
 		{
 			i++;

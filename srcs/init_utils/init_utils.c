@@ -1,5 +1,7 @@
 #include "minishell.h"
 
+static void	read_prompt(t_data *data);
+
 void	copy_env(t_list **list, char **env, t_data *data)
 {
 	int	i;
@@ -22,7 +24,7 @@ void	init_readline(t_data *data)
 	{
 		data->token = NULL;
 		data->lexer = NULL;
-		data->prompt = readline("\033[1;35mgibi>\033[0m ");
+		data->prompt = readline("\001\033[1;35m\002gibi>\001\033[0m\002 ");
 		if (data->prompt == NULL)
 		{
 			ft_putendl_fd("exit", 1);
@@ -34,7 +36,7 @@ void	init_readline(t_data *data)
 			if (tokenization(data) == 1 && check_for_quotes(data) == 1)
 			{
 				check_var(data);
-				read_prompt(data->token, data->lexer, data);
+				read_prompt(data);
 			}
 			if (data->lexer != NULL)
 				free(data->lexer);
@@ -45,19 +47,25 @@ void	init_readline(t_data *data)
 	}
 }
 
-void	read_prompt(t_list *token, int *lexer, t_data *data)
+static void	read_prompt(t_data *data)
 {
 	int		i;
-	int		list_len;
+	t_list	*temp;
 
-	list_len = ft_lstsize(token);
-	i = -1;
-	data->process_count = 1;
-	while (token != NULL)
-	{
-		if (lexer[++i] == PIPE)
-			data->process_count++;
-		token = token->next;
-	}
-	execute(data);
+	// if (check_heredoc(data) == 1)
+	// {
+		i = -1;
+		data->process_count = 1;
+		data->builtin_check = 0;
+		temp = data->token;
+		while (temp != NULL)
+		{
+			if (data->lexer[++i] == PIPE)
+				data->process_count++;
+			if (data->process_count == 1 && data->lexer[i] == BUILTIN)
+				data->builtin_check = 1;
+			temp = temp->next;
+		}
+		execute(data);
+	// }
 }

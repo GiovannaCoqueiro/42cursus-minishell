@@ -66,6 +66,7 @@ typedef struct s_data
 	int		has_cmd;
 	int		has_builtin;
 	int		process_count;
+	int		builtin_check;
 	t_args	*args;
 	int		exit_status;
 
@@ -74,7 +75,6 @@ typedef struct s_data
 /* Init */
 void	copy_env(t_list **list, char **env, t_data *data);
 void	init_readline(t_data *data);
-void	read_prompt(t_list *token, int *lexer, t_data *data);
 
 /* Signal */
 void	signal_handler(int signal);

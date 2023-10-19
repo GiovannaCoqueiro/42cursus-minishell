@@ -6,7 +6,7 @@
 #    By: gcoqueir <gcoqueir@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/12 10:33:46 by bedos-sa          #+#    #+#              #
-#    Updated: 2023/10/17 07:58:32 by gcoqueir         ###   ########.fr        #
+#    Updated: 2023/10/19 06:48:39 by gcoqueir         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,11 +29,12 @@ SIG_DIR = signal/
 TOKEN_DIR = token/
 EXEC_DIR = exec/
 REDIRECT_DIR = redirect/
+FREE_DIR = free/
 
 RM = rm -f
 FILES = main.c \
-		frees.c \
 		$(INIT_DIR)init_utils.c \
+		$(BUILT_DIR)execute_builtin.c \
 		$(BUILT_DIR)exit.c \
 		$(BUILT_DIR)env.c \
 		$(BUILT_DIR)pwd.c \
@@ -56,7 +57,8 @@ FILES = main.c \
 		$(EXEC_DIR)pipes.c \
 		$(EXEC_DIR)get_cmd_and_builtin.c \
 		$(EXEC_DIR)here_doc.c \
-		$(REDIRECT_DIR)files.c
+		$(REDIRECT_DIR)files.c \
+		$(FREE_DIR)frees.c
 		
 OBJS = $(FILES:.c=.o)
 
@@ -74,6 +76,7 @@ mkdir_obj:
 	@mkdir -p $(OBJ_DIR)$(EXEC_DIR)
 	@mkdir -p $(OBJ_DIR)$(REDIRECT_DIR)
 	@mkdir -p $(OBJ_DIR)$(FIX_INPUT_DIR)
+	@mkdir -p $(OBJ_DIR)$(FREE_DIR)
 
 $(NAME): $(addprefix $(OBJ_DIR), $(OBJS))
 	@make -C $(LIBFT) --silent
