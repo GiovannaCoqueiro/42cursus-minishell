@@ -22,6 +22,8 @@ void	init_readline(t_data *data)
 {
 	while (true)
 	{
+		// signal(SIGINT, sigint_handler);
+		signal(SIGQUIT, SIG_IGN);
 		data->token = NULL;
 		data->lexer = NULL;
 		data->prompt = readline("\001\033[1;35m\002gibi>\001\033[0m\002 ");

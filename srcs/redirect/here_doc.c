@@ -1,7 +1,19 @@
-// #include "minishell.h"
+#include "minishell.h"
 
 // static void	here_doc_utils(int *fd, char *end_msg, t_exec *exec);
 // static char	*get_line(int fd);
+
+// int	check_heredoc(t_data *data)
+// {
+// 	t_list	*temp;
+// 	int		i;
+
+// 	temp = data->token;
+// 	while (temp != NULL)
+// 	{
+		
+// 	}
+// }
 
 // void	here_doc(char *end_msg, t_exec *exec)
 // {

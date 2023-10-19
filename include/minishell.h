@@ -40,6 +40,12 @@ enum	e_lexeme
 	ARG
 };
 
+typedef struct s_heredoc
+{
+	char	**file;
+	int		*fd;
+}			t_heredoc;
+
 typedef struct s_exec
 {
 	char			**cmd;
@@ -77,7 +83,7 @@ void	copy_env(t_list **list, char **env, t_data *data);
 void	init_readline(t_data *data);
 
 /* Signal */
-void	signal_handler(int signal);
+void	sigint_handler(int signal);
 void	signal_ignore(void);
 void	signal_default(void);
 
