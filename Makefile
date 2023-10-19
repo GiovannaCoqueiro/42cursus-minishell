@@ -6,7 +6,7 @@
 #    By: gcoqueir <gcoqueir@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/12 10:33:46 by bedos-sa          #+#    #+#              #
-#    Updated: 2023/10/19 06:48:39 by gcoqueir         ###   ########.fr        #
+#    Updated: 2023/10/19 07:00:26 by gcoqueir         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -40,6 +40,7 @@ FILES = main.c \
 		$(BUILT_DIR)pwd.c \
 		$(BUILT_DIR)unset.c \
 		$(BUILT_DIR)export.c \
+		$(BUILT_DIR)export_utils.c \
 		$(BUILT_DIR)echo.c \
 		$(BUILT_DIR)cd.c \
 		$(SIG_DIR)signal.c \
