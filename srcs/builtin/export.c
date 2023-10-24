@@ -2,8 +2,8 @@
 
 static void		sort_env(t_list *export);
 static t_list	*copy_env_list(t_list *env, t_list *lst);
-static void		print_export(t_list *export);
 static int		find_in_env(t_data *data, char	*prompt);
+static int		search_key(char **env, t_list *temp, char **arr, char *var);
 
 void	export_builtin(t_data *data, char **args)
 {
@@ -53,6 +53,15 @@ static int	find_in_env(t_data *data, char *var)
 		ft_free_str_arr(&arr);
 		return (2);
 	}
+	env = NULL;
+	if (search_key(env, temp, arr, var) == 1)
+		return (1);
+	ft_free_str_arr(&arr);
+	return (0);
+}
+
+static int	search_key(char **env, t_list *temp, char **arr, char *var)
+{
 	while (temp)
 	{
 		env = split_key_and_value(temp->content, '=');
@@ -70,7 +79,6 @@ static int	find_in_env(t_data *data, char *var)
 		ft_free_str_arr(&env);
 		temp = temp->next;
 	}
-	ft_free_str_arr(&arr);
 	return (0);
 }
 
@@ -100,20 +108,4 @@ static void	sort_env(t_list *export)
 	}
 	print_export(export);
 	free_list(export);
-}
-
-static void	print_export(t_list *export)
-{
-	char	**arr;
-
-	while (export)
-	{
-		arr = split_key_and_value((char *)export->content, '=');
-		if (arr[1])
-			printf("declare -x %s=\"%s\"\n", arr[0], arr[1]);
-		else
-			printf("declare -x %s=\"\"\n", arr[0]);
-		ft_free_str_arr(&arr);
-		export = export->next;
-	}
 }

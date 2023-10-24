@@ -120,6 +120,7 @@ void	unset_builtin(t_data *data, char **args);
 void	export_builtin(t_data *data, char **args);
 char	**split_key_and_value(char *str, char c);
 int		check_key(char *str);
+void	print_export(t_list *export);
 void	echo_builtin(t_data *data, char **args);
 void	cd_builtin(t_data *data, char **args);
 
