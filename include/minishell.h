@@ -133,7 +133,6 @@ void	close_files(int fd_in, int fd_out);
 
 /* Free */
 void	free_cmd_not_found(char **path, char **env, t_data *data, pid_t *pids);
-void	free_is_dir(char **path, char **env, t_data *data, pid_t *pids);
 void	free_builtin(t_data *data, pid_t *pids);
 void	free_for_all(t_data *data);
 void	free_list(t_list *list);
