@@ -6,7 +6,7 @@
 #    By: gcoqueir <gcoqueir@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/12 10:33:46 by bedos-sa          #+#    #+#              #
-#    Updated: 2023/10/30 16:22:09 by gcoqueir         ###   ########.fr        #
+#    Updated: 2023/10/30 19:31:39 by gcoqueir         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -50,6 +50,7 @@ FILES = main.c \
 		$(TOKEN_DIR)syntax.c \
 		$(FIX_INPUT_DIR)fix_input.c \
 		$(FIX_INPUT_DIR)expansion.c \
+		$(FIX_INPUT_DIR)expand_utils.c \
 		$(FIX_INPUT_DIR)check_quotes.c \
 		$(FIX_INPUT_DIR)check_tildes.c \
 		$(FIX_INPUT_DIR)check_exit_status.c \

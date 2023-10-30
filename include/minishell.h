@@ -99,6 +99,7 @@ int		check_for_quotes(t_data *data);
 void	check_var(t_data *data);
 char	*expand_exit_status(char *str, int index, int exit_status);
 char	*search_and_expand_var(char *str, t_data *data);
+char	*expand_utils(t_data *data, char *str, int i);
 void	check_tildes(t_list *token, char *home);
 char	*search_and_remove_quotes(char *str);
 
