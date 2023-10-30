@@ -5,8 +5,8 @@ static int	open_file(char *file, int mode, int *fd_in, int *fd_out);
 
 int	validate_files(t_list *token, int *lexer, int *fd_in, int *fd_out)
 {
-	t_list		*temp;
-	int			i;
+	t_list	*temp;
+	int		i;
 
 	*fd_in = -2;
 	*fd_out = -2;
@@ -14,8 +14,8 @@ int	validate_files(t_list *token, int *lexer, int *fd_in, int *fd_out)
 	temp = token;
 	while (temp->next != NULL && lexer[++i] != PIPE)
 	{
-		if (verify_redirect(lexer[i], (char *)temp->next->content,
-				fd_in, fd_out) == 0)
+		if (verify_redirect(lexer[i], (char *)temp->next->content, fd_in,
+				fd_out) == 0)
 			return (0);
 		temp = temp->next;
 	}
@@ -37,10 +37,10 @@ static int	verify_redirect(int lex, char *file, int *fd_in, int *fd_out)
 		else
 		{
 			if (*fd_in != -2)
-				close (*fd_in);
+				close(*fd_in);
 			if (*fd_out != -2)
-				close (*fd_out);
-			ft_printf_fd(2, "No such file or directory\n");
+				close(*fd_out);
+			ft_printf_fd(2, " No such file or directory\n");
 			return (0);
 		}
 	}
@@ -54,20 +54,20 @@ static int	open_file(char *file, int mode, int *fd_in, int *fd_out)
 	if (mode == INFILE)
 	{
 		if (*fd_in != -2)
-			close (*fd_in);
+			close(*fd_in);
 		fd = open(file, O_RDONLY);
 	}
 	else if (mode == OUTFILE)
 	{
 		if (*fd_out != -2)
-			close (*fd_out);
-		fd = open(file, O_RDWR | O_TRUNC | O_CREAT, 0777);
+			close(*fd_out);
+		fd = open(file, O_RDWR | O_TRUNC | O_CREAT, 0644);
 	}
 	else
 	{
 		if (*fd_out != -2)
-			close (*fd_out);
-		fd = open(file, O_RDWR | O_APPEND | O_CREAT, 0777);
+			close(*fd_out);
+		fd = open(file, O_RDWR | O_APPEND | O_CREAT, 0644);
 	}
 	return (fd);
 }

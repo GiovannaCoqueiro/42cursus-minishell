@@ -10,6 +10,16 @@ void	free_cmd_not_found(char **path, char **env, t_data *data, pid_t *pids)
 	free_for_all(data);
 }
 
+void	free_is_dir(char **path, char **env, t_data *data, pid_t *pids)
+{
+	ft_printf_fd(2, "Is a directory\n");
+	free(pids);
+	ft_free_str_arr(&path);
+	ft_free_str_arr(&env);
+	free_exec(data->exec);
+	free_for_all(data);
+}
+
 void	free_builtin(t_data *data, pid_t *pids)
 {
 	free(pids);

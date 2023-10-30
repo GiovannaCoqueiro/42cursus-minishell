@@ -6,10 +6,11 @@ static void	try_paths(t_exec *exec, char **path, char **env);
 
 void	child_process(t_data *data, t_list *token, int *lexer, pid_t *pids)
 {
-	char	**path;
-	char	**env;
-	int		fd[2];
-	int		backup_exit_status;
+	char		**path;
+	char		**env;
+	int			fd[2];
+	int			backup_exit_status;
+	struct stat	file_info;
 
 	if (validate_files(token, lexer, &fd[0], &fd[1]) == 1)
 	{
@@ -32,6 +33,15 @@ void	child_process(t_data *data, t_list *token, int *lexer, pid_t *pids)
 			{
 				env = turn_env_to_arr(data->env);
 				path = find_path(env);
+				if (stat(data->exec->cmd[0], &file_info) == 0)
+				{
+					if (S_ISDIR(file_info.st_mode))
+					{
+						close_files(fd[0], fd[1]);
+						free_is_dir(path, env, data, pids);
+						exit(126);
+					}				
+				}
 				try_paths(data->exec, path, env);
 				close_files(fd[0], fd[1]);
 				free_cmd_not_found(path, env, data, pids);
@@ -46,7 +56,7 @@ void	child_process(t_data *data, t_list *token, int *lexer, pid_t *pids)
 	}
 	free(pids);
 	free_for_all(data);
-	exit (1);
+	exit(1);
 }
 
 static char	**turn_env_to_arr(t_list *env)
@@ -93,9 +103,9 @@ static char	**find_path(char **env)
 
 static void	try_paths(t_exec *exec, char **path, char **env)
 {
-	int		i;
-	int		strlen;
-	char	*copy;
+	int			i;
+	int			strlen;
+	char		*copy;
 
 	if (access(exec->cmd[0], F_OK) == 0)
 		execve(exec->cmd[0], exec->cmd, env);
