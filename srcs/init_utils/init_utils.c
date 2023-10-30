@@ -1,5 +1,6 @@
 #include "minishell.h"
 
+static void	parse_promt(t_data *data);
 static void	read_prompt(t_data *data);
 
 void	copy_env(t_list **list, char **env, t_data *data)
@@ -33,20 +34,23 @@ void	init_readline(t_data *data)
 			break ;
 		}
 		if (ft_strlen(data->prompt) >= 1)
-		{
-			add_history(data->prompt);
-			if (tokenization(data) == 1 && check_for_quotes(data) == 1)
-			{
-				check_var(data);
-				read_prompt(data);
-			}
-			if (data->lexer != NULL)
-				free(data->lexer);
-			if (data->token != NULL)
-				free_list(data->token);
-		}
+			parse_promt(data);
 		free(data->prompt);
 	}
+}
+
+static void	parse_promt(t_data *data)
+{
+	add_history(data->prompt);
+	if (tokenization(data) == 1 && check_for_quotes(data) == 1)
+	{
+		check_var(data);
+		read_prompt(data);
+	}
+	if (data->lexer != NULL)
+		free(data->lexer);
+	if (data->token != NULL)
+		free_list(data->token);
 }
 
 static void	read_prompt(t_data *data)

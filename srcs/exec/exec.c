@@ -3,7 +3,7 @@
 static void	commands_fork(t_args *args, t_data *data);
 static void	execute_builtin_parent_process(t_data *data);
 static void	execute_child_process(t_data *data, t_args *args);
-static void	wait_all_processes(t_data *data, pid_t *pids, int flag);
+static void	child_proc_utils(t_data *data, t_list *temp, int *lex, pid_t *pids);
 
 void	execute(t_data *data)
 {
@@ -65,11 +65,7 @@ static void	execute_child_process(t_data *data, t_args *args)
 			temp = temp->next;
 		}
 		pids[args->index] = fork();
-		if (pids[args->index] == 0)
-			child_process(data, temp, &data->lexer[i], pids);
-		if (data->process_count == 1)
-			wait_all_processes(data, pids, data->process_count);
-		recycle_pipe(args);
+		child_proc_utils(data, temp, &data->lexer[i], pids);
 		while (temp != NULL && data->lexer[i] != PIPE)
 		{
 			temp = temp->next;
@@ -81,22 +77,11 @@ static void	execute_child_process(t_data *data, t_args *args)
 	free(pids);
 }
 
-static void	wait_all_processes(t_data *data, pid_t *pids, int flag)
+static void	child_proc_utils(t_data *data, t_list *temp, int *lex, pid_t *pids)
 {
-	int	i;
-
-	i = -1;
-	if (flag == 1)
-	{
-		waitpid(pids[++i], &data->exit_status, 0);
-		if (WEXITSTATUS(data->exit_status))
-			data->exit_status = WEXITSTATUS(data->exit_status);
-	}
-	else
-	{
-		while (++i < data->process_count)
-			waitpid(pids[i], &data->exit_status, 0);
-		if (WEXITSTATUS(data->exit_status))
-			data->exit_status = WEXITSTATUS(data->exit_status);
-	}
+	if (pids[data->args->index] == 0)
+		child_process(data, temp, lex, pids);
+	if (data->process_count == 1)
+		wait_all_processes(data, pids, data->process_count);
+	recycle_pipe(data->args);
 }

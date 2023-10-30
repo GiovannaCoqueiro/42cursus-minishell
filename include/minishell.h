@@ -106,13 +106,13 @@ char	*search_and_remove_quotes(char *str);
 /* Exec */
 void	execute(t_data *data);
 void	child_process(t_data *data, t_list *token, int *lexer, pid_t *pids);
-void	first_command(t_args *args);
-void	middle_command(t_args *args);
-void	last_command(t_args *args);
+void	deal_with_pipes(t_data *data);
 void	get_cmd_and_args(t_list *token, int *lexer, t_data *data);
+void	finally_execute(t_data *data, int fd[], pid_t *pids);
 void	close_pipes(t_args *args);
 void	recycle_pipe(t_args *args);
 void	execute_builtin(t_data *data, t_exec *exec, pid_t *pids);
+void	wait_all_processes(t_data *data, pid_t *pids, int flag);
 
 /* Builtin */
 void	exit_builtin(t_data *data, pid_t *pids, char **args);
