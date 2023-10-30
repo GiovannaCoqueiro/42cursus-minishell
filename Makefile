@@ -6,7 +6,7 @@
 #    By: gcoqueir <gcoqueir@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/12 10:33:46 by bedos-sa          #+#    #+#              #
-#    Updated: 2023/10/19 18:53:29 by gcoqueir         ###   ########.fr        #
+#    Updated: 2023/10/30 16:22:09 by gcoqueir         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -58,8 +58,8 @@ FILES = main.c \
 		$(EXEC_DIR)child_dups.c \
 		$(EXEC_DIR)pipes.c \
 		$(EXEC_DIR)get_cmd_and_builtin.c \
-		$(EXEC_DIR)here_doc.c \
 		$(REDIRECT_DIR)files.c \
+		$(REDIRECT_DIR)here_doc.c \
 		$(FREE_DIR)frees.c
 		
 OBJS = $(FILES:.c=.o)

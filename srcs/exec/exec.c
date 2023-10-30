@@ -39,19 +39,13 @@ static void	execute_builtin_parent_process(t_data *data)
 		if (fd[0] != -2 || fd[1] != -2)
 			redirect_files(fd[0], fd[1]);
 		execute_builtin(data, data->exec, NULL);
-		close_files(fd[0], fd[1]);
 		free_exec(data->exec);
 	}
-	else if (result == 2)
-	{
-		close_files(fd[0], fd[1]);
+	else if (result == 2 || result == 4)
 		data->exit_status = 1;
-	}
 	else if (result == 3)
-	{
-		close_files(fd[0], fd[1]);
 		data->exit_status = 126;
-	}
+	close_files(fd[0], fd[1]);
 }
 
 static void	execute_child_process(t_data *data, t_args *args)

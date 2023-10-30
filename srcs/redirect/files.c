@@ -24,6 +24,8 @@ int	validate_files(t_list *token, int *lexer, int *fd_in, int *fd_out)
 				return (2);
 			if (result == 3)
 				return (3);
+			if (result == 4)
+				return (4);
 		}
 		temp = temp->next;
 	}
@@ -32,6 +34,16 @@ int	validate_files(t_list *token, int *lexer, int *fd_in, int *fd_out)
 
 static int	open_redirect(int lex, char *file, int *fd_in, int *fd_out)
 {
+	struct stat	file_info;
+
+	if (stat(file, &file_info) == 0)
+	{
+		if (S_ISDIR(file_info.st_mode))
+		{
+			ft_printf_fd(2, "%s: Is a directory\n", file);
+			return (4);
+		}
+	}
 	if (lex == INFILE)
 		*fd_in = open(file, O_RDONLY);
 	else if (lex == OUTFILE)
