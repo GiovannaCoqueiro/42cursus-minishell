@@ -1,6 +1,5 @@
 #include "minishell.h"
 
-static int		is_redirect(int lex);
 static t_exec	*create_cmd_arr(int *lex, t_list *token, int len, int size);
 static char		*copy_str(t_list *token);
 static void		init_exec(t_exec *exec, int lex, int size);
@@ -31,19 +30,6 @@ void	get_cmd_and_args(t_list *token, int *lexer, t_data *data)
 	}
 	if (data->has_cmd == 1 || data->has_builtin == 1)
 		data->exec = create_cmd_arr(lexer, token, len, len - redirect);
-}
-
-static int	is_redirect(int lex)
-{
-	if (lex == INFILE)
-		return (1);
-	else if (lex == OUTFILE)
-		return (1);
-	else if (lex == HEREDOC)
-		return (1);
-	else if (lex == APPEND)
-		return (1);
-	return (0);
 }
 
 static t_exec	*create_cmd_arr(int *lex, t_list *token, int len, int size)

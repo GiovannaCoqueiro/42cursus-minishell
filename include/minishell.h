@@ -92,6 +92,7 @@ int		tokenization(t_data *data);
 int		lex_analysis(t_data *data);
 int		syntax_analysis(int *lexer, int len);
 int		is_quoted(char c, int identifier);
+int		is_redirect(int value);
 
 /* Fix input */
 int		check_for_quotes(t_data *data);
