@@ -53,7 +53,7 @@ void	child_process(t_data *data, t_list *token, int *lexer, pid_t *pids)
 	close_files(fd[0], fd[1]);
 	free(pids);
 	free_for_all(data);
-	exit(data->exit_status);
+	exit(1);
 }
 
 static char	**turn_env_to_arr(t_list *env)
