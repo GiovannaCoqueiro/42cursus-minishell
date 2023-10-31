@@ -2,8 +2,7 @@
 
 static int	open_heredoc(t_data *data, int size);
 static int	open_file(char *file);
-static void	write_on_heredoc(int fd, char *end_msg);
-// static char	*get_line(int fd);
+static void	write_on_heredoc(int fd, char *end_msg, t_data *data);
 
 int	check_heredoc(t_data *data)
 {
@@ -23,6 +22,11 @@ int	check_heredoc(t_data *data)
 	if (size > 0)
 		if (open_heredoc(data, size) == 0)
 			return (0);
+	if (*get_heredoc_flag() == 1)
+	{
+		data->exit_status = 130;
+		return (0);
+	}
 	return (1);
 }
 
@@ -31,6 +35,7 @@ static int	open_heredoc(t_data *data, int size)
 	t_list	*temp;
 	int		i;
 	int		index;
+	int		backup;
 
 	data->fd_heredoc = ft_calloc(sizeof(int), size);
 	temp = data->token;
@@ -38,13 +43,17 @@ static int	open_heredoc(t_data *data, int size)
 	index = 0;
 	while (temp != NULL)
 	{
+		backup = dup(0);
 		if (data->lexer[++i] == HEREDOC)
 		{
 			data->fd_heredoc[index] = open_file((char *)temp->next->content);
+			if (data->fd_heredoc[index] == -1)
+				return (0);
 			write_on_heredoc(data->fd_heredoc[index],
-				(char *)temp->next->content);
+				(char *)temp->next->content, data);
 			close(data->fd_heredoc[index++]);
 		}
+		dup2(backup, 0);
 		temp = temp->next;
 	}
 	return (1);
@@ -55,16 +64,18 @@ static int	open_file(char *file)
 	int	fd;
 
 	fd = open(file, O_WRONLY | O_CREAT, 0644);
+	if (fd < 0)
+		return (-1);
 	return (fd);
 }
 
-static void	write_on_heredoc(int fd, char *end_msg)
+static void	write_on_heredoc(int fd, char *end_msg, t_data *data)
 {
 	char	*temp;
 
 	while (true)
 	{
-		signal(SIGINT, sigint_parent_process);
+		signal(SIGINT, sigint_heredoc);
 		signal(SIGQUIT, SIG_IGN);
 		temp = readline("> ");
 		if (temp == NULL)
@@ -72,14 +83,13 @@ static void	write_on_heredoc(int fd, char *end_msg)
 			ft_putchar_fd('\n', 1);
 			break ;
 		}
-		if (ft_strncmp(temp, end_msg, ft_strlen(end_msg)) == 0)
+		if (ft_strcmp(temp, end_msg) == 0)
 		{
-			ft_putstr_fd("\n", fd);
 			free(temp);
 			break ;
 		}
-		ft_putstr_fd(temp, fd);
-		ft_putstr_fd("\n", fd);
+		temp = check_var_heredoc(temp, data);
+		ft_putendl_fd(temp, fd);
 		free(temp);
 	}
 }

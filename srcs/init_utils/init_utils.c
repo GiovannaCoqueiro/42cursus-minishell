@@ -3,6 +3,13 @@
 static void	parse_promt(t_data *data);
 static void	read_prompt(t_data *data);
 
+int	*get_heredoc_flag(void)
+{
+	static int	heredoc_flag;
+
+	return (&heredoc_flag);
+}
+
 void	copy_env(t_list **list, char **env, t_data *data)
 {
 	int	i;
@@ -64,6 +71,7 @@ static void	read_prompt(t_data *data)
 	int		i;
 	t_list	*temp;
 
+	*get_heredoc_flag() = 0;
 	if (check_heredoc(data) == 1)
 	{
 		i = -1;

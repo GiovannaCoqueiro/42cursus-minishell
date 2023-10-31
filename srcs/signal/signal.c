@@ -21,10 +21,9 @@ void	signal_default(void)
 	signal(SIGQUIT, SIG_DFL);
 }
 
-// void	sigint_heredoc(int signal)
-// {
-// 	if (signal == SIGINT)
-// 	{
-
-// 	}
-// }
+void	sigint_heredoc(int signal)
+{
+	if (signal == SIGINT)
+		*get_heredoc_flag() = 1;
+	close(STDIN_FILENO);
+}

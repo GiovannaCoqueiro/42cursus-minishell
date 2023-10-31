@@ -1,7 +1,6 @@
 #include "minishell.h"
 
 static char	*expand_var(char *str, int index, t_list *env);
-static char	*get_key(char *str, int start, int end);
 static char	*change_to_value(int index, char *str, char *value);
 static char	*complete_newstr(char *str, char *temp, size_t start, size_t end);
 
@@ -21,7 +20,7 @@ static char	*expand_var(char *str, int index, t_list *env)
 	int		i;
 
 	i = index + 1;
-	while (ft_strchr(VAR_STOPER, str[i]) == NULL && str[i] != '\0')
+	while (ft_strchr(VAR_BLOCK, str[i]) == NULL && str[i] != '\0')
 		i++;
 	temp = get_key(str, index, i);
 	while (env != NULL)
@@ -42,7 +41,7 @@ static char	*expand_var(char *str, int index, t_list *env)
 	return (new);
 }
 
-static char	*get_key(char *str, int start, int end)
+char	*get_key(char *str, int start, int end)
 {
 	char	*temp;
 
@@ -60,9 +59,11 @@ static char	*change_to_value(int index, char *str, char *value)
 
 	free(str);
 	i = 0;
-	temp = ft_calloc(1, ft_strlen(value) - index + 1);
+	temp = ft_calloc(1, ft_strlen(value) - index + 1 + 2);
+	temp[i++] = '\"';
 	while (value[index] != '\0')
 		temp[i++] = value[index++];
+	temp[i++] = '\"';
 	temp[i] = '\0';
 	return (temp);
 }

@@ -13,7 +13,7 @@
 
 /* Characteres */
 # define METACHAR "<>| "
-# define VAR_STOPER " \'\"/$"
+# define VAR_BLOCK " <>|?\'\"/$"
 # define BLANK "\t\n\v\f\r "
 # define S_QUOTE '\''
 # define D_QUOTES '\"'
@@ -75,7 +75,6 @@ typedef struct s_data
 	t_args	*args;
 	int		exit_status;
 	int		*fd_heredoc;
-
 }			t_data;
 
 /* Init */
@@ -86,6 +85,8 @@ void	init_readline(t_data *data);
 void	sigint_parent_process(int signal);
 void	signal_ignore(void);
 void	signal_default(void);
+void	sigint_heredoc(int signal);
+int		*get_heredoc_flag(void);
 
 /* Token and syntax*/
 int		tokenization(t_data *data);
@@ -102,6 +103,9 @@ char	*search_and_expand_var(char *str, t_data *data);
 char	*expand_utils(t_data *data, char *str, int i);
 void	check_tildes(t_list *token, char *home);
 char	*search_and_remove_quotes(char *str);
+char	*check_heredoc_var(char *str, t_data *data);
+char	*get_key(char *str, int start, int end);
+char	*check_var_heredoc(char *str, t_data *data);
 
 /* Exec */
 void	execute(t_data *data);

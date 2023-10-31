@@ -69,7 +69,7 @@ static void	execute_child_process(t_data *data, t_args *args)
 			i++;
 			temp = temp->next;
 		}
-		pids[args->index] = fork();
+		pids[data->args->index] = fork();
 		child_proc_utils(data, temp, &data->lexer[i], pids);
 		while (temp != NULL && data->lexer[i] != PIPE)
 		{
@@ -84,13 +84,12 @@ static void	execute_child_process(t_data *data, t_args *args)
 
 static void	child_proc_utils(t_data *data, t_list *temp, int *lex, pid_t *pids)
 {
+	signal_default();
 	if (pids[data->args->index] == 0)
 	{
-		signal_default();
-		if (pids[data->args->index] == 0)
-			child_process(data, temp, lex, pids);
-		if (data->process_count == 1)
-			wait_all_processes(data, pids, data->process_count);
-		recycle_pipe(data->args);
+		child_process(data, temp, lex, pids);
 	}
+	else
+		signal_ignore();
+	recycle_pipe(data->args);
 }
