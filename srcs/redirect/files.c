@@ -46,6 +46,8 @@ static int	open_redirect(int lex, char *file, int *fd_in, int *fd_out)
 	}
 	if (lex == INFILE)
 		*fd_in = open(file, O_RDONLY);
+	else if (lex == HEREDOC)
+		*fd_in = open(file, O_RDONLY);
 	else if (lex == OUTFILE)
 		*fd_out = open(file, O_RDWR | O_TRUNC | O_CREAT, 0644);
 	else if (lex == APPEND)

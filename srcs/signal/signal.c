@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-void	sigint_handler(int signal)
+void	sigint_parent_process(int signal)
 {
 	(void)signal;
 	write(1, "\n", 1);
@@ -20,3 +20,11 @@ void	signal_default(void)
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
 }
+
+// void	sigint_heredoc(int signal)
+// {
+// 	if (signal == SIGINT)
+// 	{
+
+// 	}
+// }

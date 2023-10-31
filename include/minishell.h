@@ -42,7 +42,6 @@ enum	e_lexeme
 
 typedef struct s_heredoc
 {
-	char	**file;
 	int		*fd;
 }			t_heredoc;
 
@@ -75,6 +74,7 @@ typedef struct s_data
 	int		builtin_check;
 	t_args	*args;
 	int		exit_status;
+	int		*fd_heredoc;
 
 }			t_data;
 
@@ -83,7 +83,7 @@ void	copy_env(t_list **list, char **env, t_data *data);
 void	init_readline(t_data *data);
 
 /* Signal */
-void	sigint_handler(int signal);
+void	sigint_parent_process(int signal);
 void	signal_ignore(void);
 void	signal_default(void);
 
@@ -130,6 +130,8 @@ void	cd_builtin(t_data *data, char **args);
 int		validate_files(t_list *token, int *lexer, int *fd_in, int *fd_out);
 void	redirect_files(int fd_in, int fd_out);
 void	close_files(int fd_in, int fd_out);
+int		check_heredoc(t_data *data);
+void	delete_heredoc_files(t_data *data);
 
 /* Free */
 void	free_cmd_not_found(char **path, char **env, t_data *data, pid_t *pids);

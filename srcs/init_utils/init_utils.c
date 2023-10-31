@@ -23,10 +23,11 @@ void	init_readline(t_data *data)
 {
 	while (true)
 	{
-		// signal(SIGINT, sigint_handler);
+		signal(SIGINT, sigint_parent_process);
 		signal(SIGQUIT, SIG_IGN);
 		data->token = NULL;
 		data->lexer = NULL;
+		data->fd_heredoc = NULL;
 		data->prompt = readline("\001\033[1;35m\002gibi>\001\033[0m\002 ");
 		if (data->prompt == NULL)
 		{
@@ -47,6 +48,11 @@ static void	parse_promt(t_data *data)
 		check_var(data);
 		read_prompt(data);
 	}
+	if (data->fd_heredoc != NULL)
+	{
+		delete_heredoc_files(data);
+		free(data->fd_heredoc);
+	}
 	if (data->lexer != NULL)
 		free(data->lexer);
 	if (data->token != NULL)
@@ -58,8 +64,8 @@ static void	read_prompt(t_data *data)
 	int		i;
 	t_list	*temp;
 
-	// if (check_heredoc(data) == 1)
-	// {
+	if (check_heredoc(data) == 1)
+	{
 		i = -1;
 		data->process_count = 1;
 		data->builtin_check = 0;
@@ -73,5 +79,5 @@ static void	read_prompt(t_data *data)
 			temp = temp->next;
 		}
 		execute(data);
-	// }
+	}
 }

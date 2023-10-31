@@ -1,69 +1,85 @@
 #include "minishell.h"
 
-// static void	here_doc_utils(int *fd, char *end_msg, t_exec *exec);
+static int	open_heredoc(t_data *data, int size);
+static int	open_file(char *file);
+static void	write_on_heredoc(int fd, char *end_msg);
 // static char	*get_line(int fd);
 
-// void	here_doc(char *end_msg, t_exec *exec)
-// {
-// 	pid_t	pid;
-// 	int		fd[2];
+int	check_heredoc(t_data *data)
+{
+	int		i;
+	int		size;
+	t_list	*temp;
 
-// 	if (pipe(fd) == -1)
-// 		error_check(4, exec);
-// 	pid = fork();
-// 	if (pid == -1)
-// 		error_check(4, exec);
-// 	if (pid == 0)
-// 		here_doc_utils(fd, end_msg, exec);
-// 	else
-// 	{
-// 		dup2(fd[0], STDIN_FILENO);
-// 		close(fd[1]);
-// 		waitpid(pid, NULL, WNOHANG);
-// 	}
-// }
+	i = -1;
+	size = 0;
+	temp = data->token;
+	while (temp != NULL)
+	{
+		if (data->lexer[++i] == HEREDOC)
+			size++;
+		temp = temp->next;
+	}
+	if (size > 0)
+		if (open_heredoc(data, size) == 0)
+			return (0);
+	return (1);
+}
 
-// static void	here_doc_utils(int *fd, char *end_msg, t_exec *exec)
-// {
-// 	char	*temp;
+static int	open_heredoc(t_data *data, int size)
+{
+	t_list	*temp;
+	int		i;
+	int		index;
 
-// 	close(fd[0]);
-// 	while (1)
-// 	{
-// 		temp = get_line(STDIN_FILENO);
-// 		if (ft_strncmp(temp, end_msg, ft_strlen(end_msg)) == 0)
-// 		{
-// 			free(temp);
-// 			close(exec->outfile);
-// 			exit(EXIT_SUCCESS);
-// 		}
-// 		ft_putstr_fd(temp, fd[1]);
-// 		free(temp);
-// 	}
-// }
+	data->fd_heredoc = ft_calloc(sizeof(int), size);
+	temp = data->token;
+	i = -1;
+	index = 0;
+	while (temp != NULL)
+	{
+		if (data->lexer[++i] == HEREDOC)
+		{
+			data->fd_heredoc[index] = open_file((char *)temp->next->content);
+			write_on_heredoc(data->fd_heredoc[index],
+				(char *)temp->next->content);
+			close(data->fd_heredoc[index++]);
+		}
+		temp = temp->next;
+	}
+	return (1);
+}
 
-// static char	*get_line(int fd)
-// {
-// 	char	*temp;
-// 	char	*str;
-// 	int		bytes_read;
+static int	open_file(char *file)
+{
+	int	fd;
 
-// 	temp = malloc((BUFFER_SIZE + 1) * sizeof(char));
-// 	if (temp == NULL)
-// 		return (NULL);
-// 	str = "\0";
-// 	bytes_read = 1;
-// 	while (ft_strchr(str, '\n') == NULL && bytes_read != 0)
-// 	{
-// 		bytes_read = read(fd, temp, BUFFER_SIZE);
-// 		if (bytes_read < 0)
-// 		{
-// 			free (temp);
-// 			return (NULL);
-// 		}
-// 		temp[bytes_read] = '\0';
-// 		str = ft_strjoin(str, temp);
-// 	}
-// 	free(temp);
-// 	return (str);
-// }
+	fd = open(file, O_WRONLY | O_CREAT, 0644);
+	return (fd);
+}
+
+static void	write_on_heredoc(int fd, char *end_msg)
+{
+	char	*temp;
+
+	while (true)
+	{
+		signal(SIGINT, sigint_parent_process);
+		signal(SIGQUIT, SIG_IGN);
+		temp = readline("> ");
+		if (temp == NULL)
+		{
+			ft_putchar_fd('\n', 1);
+			break ;
+		}
+		if (ft_strncmp(temp, end_msg, ft_strlen(end_msg)) == 0)
+		{
+			ft_putstr_fd("\n", fd);
+			free(temp);
+			break ;
+		}
+		ft_putstr_fd(temp, fd);
+		ft_putstr_fd("\n", fd);
+		free(temp);
+	}
+}

@@ -24,6 +24,11 @@ void	free_for_all(t_data	*data)
 		free_list(data->env);
 	if (data->prompt != NULL)
 		free(data->prompt);
+	if (data->fd_heredoc != NULL)
+	{
+		delete_heredoc_files(data);
+		free(data->fd_heredoc);
+	}
 	if (data->token != NULL)
 		free_list(data->token);
 	if (data->lexer != NULL)

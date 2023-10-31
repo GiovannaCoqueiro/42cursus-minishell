@@ -1,5 +1,8 @@
 -- signals
 
 -- HEREDOC
+    tratar expansão
 
 -- caçar leaks
+
+-- arrumar os dups quando não abre fork pra builtin
