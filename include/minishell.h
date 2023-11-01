@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: gcoqueir <gcoqueir@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/11/01 10:21:13 by bedos-sa          #+#    #+#             */
+/*   Updated: 2023/11/01 11:16:55 by gcoqueir         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -39,11 +51,6 @@ enum	e_lexeme
 	CMD,
 	ARG
 };
-
-typedef struct s_heredoc
-{
-	int		*fd;
-}			t_heredoc;
 
 typedef struct s_exec
 {
@@ -117,6 +124,8 @@ void	close_pipes(t_args *args);
 void	recycle_pipe(t_args *args);
 void	execute_builtin(t_data *data, t_exec *exec, pid_t *pids);
 void	wait_all_processes(t_data *data, pid_t *pids, int flag);
+void	verify_permission(char *copy, char **cmd, char **env);
+int		verify(int result, char *str, char **cmd, char **env);
 
 /* Builtin */
 void	exit_builtin(t_data *data, pid_t *pids, char **args);

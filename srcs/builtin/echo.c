@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   echo.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: gcoqueir <gcoqueir@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/11/01 10:21:29 by bedos-sa          #+#    #+#             */
+/*   Updated: 2023/11/01 10:29:46 by gcoqueir         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 static void	print_new_line(int n_check);
@@ -13,7 +25,7 @@ void	echo_builtin(t_data *data, char **args)
 	i = 1;
 	if (len > 1)
 	{
-		while (ft_strcmp(args[i], "-n") == 0)
+		while (args[i] != NULL && ft_strcmp(args[i], "-n") == 0)
 		{
 			i++;
 			n_check = 1;

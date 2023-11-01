@@ -1,8 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   frees.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: gcoqueir <gcoqueir@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/11/01 10:20:52 by bedos-sa          #+#    #+#             */
+/*   Updated: 2023/11/01 10:50:43 by gcoqueir         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void	free_cmd_not_found(char **path, char **env, t_data *data, pid_t *pids)
 {
-	ft_printf_fd(2, "%s: command not found\n", data->exec->cmd[0]);
 	free(pids);
 	ft_free_str_arr(&path);
 	ft_free_str_arr(&env);

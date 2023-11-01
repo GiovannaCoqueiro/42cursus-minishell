@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exit.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: gcoqueir <gcoqueir@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/11/01 10:21:50 by bedos-sa          #+#    #+#             */
+/*   Updated: 2023/11/01 13:40:41 by gcoqueir         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void	exit_builtin(t_data *data, pid_t *pids, char **args)
@@ -18,8 +30,7 @@ void	exit_builtin(t_data *data, pid_t *pids, char **args)
 		if (ft_strdigit(args[1]) == 0)
 		{
 			ft_printf_fd(2, "exit: numeric argument required\n");
-			data->exit_status = 2;
-			return ;
+			exit(2);
 		}
 		if (args[1])
 			num = ft_atol(args[1]);

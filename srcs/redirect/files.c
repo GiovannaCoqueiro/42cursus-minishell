@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   files.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: gcoqueir <gcoqueir@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/11/01 10:20:24 by bedos-sa          #+#    #+#             */
+/*   Updated: 2023/11/01 13:56:29 by gcoqueir         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 static int	verify_if_file_exists(char *file);
@@ -35,7 +47,9 @@ int	validate_files(t_list *token, int *lexer, int *fd_in, int *fd_out)
 static int	open_redirect(int lex, char *file, int *fd_in, int *fd_out)
 {
 	struct stat	file_info;
+	char		*temp;
 
+	temp = file;
 	if (stat(file, &file_info) == 0)
 	{
 		if (S_ISDIR(file_info.st_mode))
@@ -47,15 +61,25 @@ static int	open_redirect(int lex, char *file, int *fd_in, int *fd_out)
 	if (lex == INFILE)
 		*fd_in = open(file, O_RDONLY);
 	else if (lex == HEREDOC)
-		*fd_in = open(file, O_RDONLY);
+	{
+		temp = ft_strjoin("/tmp/", file);
+		*fd_in = open(temp, O_RDONLY);
+	}
 	else if (lex == OUTFILE)
 		*fd_out = open(file, O_RDWR | O_TRUNC | O_CREAT, 0644);
 	else if (lex == APPEND)
 		*fd_out = open(file, O_RDWR | O_APPEND | O_CREAT, 0644);
-	if (verify_if_file_exists(file) == 0)
+	if (verify_if_file_exists(temp) == 0)
+	{
+		free(temp);
 		return (2);
-	if (verify_permissions(lex, file) == 0)
+	}
+	if (verify_permissions(lex, temp) == 0)
+	{
+		free(temp);
 		return (3);
+	}
+	free(temp);
 	return (1);
 }
 

@@ -1,28 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   verify.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bedos-sa <bedos-sa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gcoqueir <gcoqueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/01 10:19:13 by bedos-sa          #+#    #+#             */
-/*   Updated: 2023/11/01 10:19:14 by bedos-sa         ###   ########.fr       */
+/*   Created: 2023/11/01 11:14:55 by gcoqueir          #+#    #+#             */
+/*   Updated: 2023/11/01 11:14:56 by gcoqueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	main(int argc, char **argv, char **envp)
+int	verify(int result, char *str, char **cmd, char **env)
 {
-	t_data	*data;
-
-	(void)argv;
-	if (argc == 1)
+	if (result == 0)
 	{
-		data = ft_calloc(1, sizeof(t_data));
-		copy_env(&data->env, envp, data);
-		init_readline(data);
-		free_for_all(data);
+		verify_permission(str, cmd, env);
+		return (0);
 	}
-	return (0);
+	return (-1);
 }
