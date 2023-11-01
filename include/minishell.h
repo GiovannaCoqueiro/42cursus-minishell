@@ -6,7 +6,7 @@
 /*   By: gcoqueir <gcoqueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 10:21:13 by bedos-sa          #+#    #+#             */
-/*   Updated: 2023/11/01 11:16:55 by gcoqueir         ###   ########.fr       */
+/*   Updated: 2023/11/01 14:00:21 by gcoqueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,7 +144,6 @@ int		validate_files(t_list *token, int *lexer, int *fd_in, int *fd_out);
 void	redirect_files(int fd_in, int fd_out);
 void	close_files(int fd_in, int fd_out);
 int		check_heredoc(t_data *data);
-void	delete_heredoc_files(t_data *data);
 
 /* Free */
 void	free_cmd_not_found(char **path, char **env, t_data *data, pid_t *pids);

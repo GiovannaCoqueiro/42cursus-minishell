@@ -6,7 +6,7 @@
 /*   By: gcoqueir <gcoqueir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 10:20:52 by bedos-sa          #+#    #+#             */
-/*   Updated: 2023/11/01 10:50:43 by gcoqueir         ###   ########.fr       */
+/*   Updated: 2023/11/01 14:00:27 by gcoqueir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,7 @@ void	free_for_all(t_data	*data)
 	if (data->prompt != NULL)
 		free(data->prompt);
 	if (data->fd_heredoc != NULL)
-	{
-		delete_heredoc_files(data);
 		free(data->fd_heredoc);
-	}
 	if (data->token != NULL)
 		free_list(data->token);
 	if (data->lexer != NULL)
