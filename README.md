@@ -58,7 +58,7 @@ you can run it with:
 
 | Bonus | Status |
 | :---: | :--- |
-| Manage || and && with parenthesis | not implemented |
+| Manage "||" and "&&" with parenthesis | not implemented |
 | Manage wildcards | not implemented |
 | Manage variables expansion inside ' and " | implemented |
 
